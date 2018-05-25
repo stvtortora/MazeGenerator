@@ -200,6 +200,10 @@ class Node {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_grid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/grid */ "./js/components/grid.js");
 /* harmony import */ var _components_node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/node */ "./js/components/node.js");
+/* harmony import */ var _solvers_dfs_bfs_solver__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../solvers/dfs_bfs_solver */ "./js/solvers/dfs_bfs_solver.js");
+/* harmony import */ var _util_canvas_util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/canvas_util */ "./js/util/canvas_util.js");
+
+
 
 
 
@@ -210,19 +214,20 @@ const generate_maze = (canvas, rootCoords, gridDimensions) => {
   const ctx = canvas.getContext('2d');
   let options = [root];
 
-  const step = () => {
-    if(options.length === 0) {
-      window.clearInterval(timer);
-      return;
-    };
+  const generationStep = () => {
+    // if(options.length === 0) {
+    //   window.clearInterval(timer);
+    //   dfs_bfs_solver(ctx, root, grid.matrix[99][99], 'dfs');
+    //   return;
+    // };
 
     let randomIndex = Math.floor(Math.random() * options.length);
     let selected = options.splice(randomIndex, 1)[0];
 
     if(!grid.intersectsPath(selected)) {
       grid.continuePath(selected);
-      drawPath(ctx, selected);
-      let children = selected.generateChildren(grid)
+      Object(_util_canvas_util__WEBPACK_IMPORTED_MODULE_3__["drawPath"])(ctx, selected, "#2ae950");
+      selected.generateChildren(grid);
       options = options.concat(selected.children);
 
     } else {
@@ -230,18 +235,12 @@ const generate_maze = (canvas, rootCoords, gridDimensions) => {
     }
   }
 
-  const timer = window.setInterval(step, 0);
-
-  const drawPath = (ctx, node) => {
-    ctx.fillStyle = "#2ae950";
-
-    if(node.parent_connector){
-      debugger
-      ctx.fillRect(node.parent_connector.x * 5, node.parent_connector.y * 5, 5, 5);
-    }
-    ctx.fillRect(node.x * 5, node.y * 5, 5, 5);
+  while(options.length > 0){
+    generationStep();
   }
+  Object(_solvers_dfs_bfs_solver__WEBPACK_IMPORTED_MODULE_2__["default"])(ctx, root, grid.matrix[99][99], 'dfs');
 
+  // const timer = window.setInterval(generationStep, 0);
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (generate_maze);
@@ -267,6 +266,85 @@ document.addEventListener("DOMContentLoaded", () => {
     Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(canvas, [0, 0], [100, 100]);
   });
 });
+
+
+/***/ }),
+
+/***/ "./js/solvers/dfs_bfs_solver.js":
+/*!**************************************!*\
+  !*** ./js/solvers/dfs_bfs_solver.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _util_canvas_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/canvas_util */ "./js/util/canvas_util.js");
+
+
+const dfs_bfs_solver = (ctx, root, target, algo) => {
+  let options = [root];
+
+  const solutionStep = () => {
+    let selected = algo === 'dfs' ? options.pop() : options.shift();
+    debugger
+    Object(_util_canvas_util__WEBPACK_IMPORTED_MODULE_0__["drawPath"])(ctx, selected, "#872bc4");
+    if(selected.x === target.x && selected.y === target.y) {
+      Object(_util_canvas_util__WEBPACK_IMPORTED_MODULE_0__["drawSolution"])(root, target, ctx);
+      return;
+
+    }
+debugger
+    if(selected.children) {
+      options = options.concat(selected.children);
+      debugger
+    }
+  }
+
+  setInterval(solutionStep, 0);
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (dfs_bfs_solver);
+
+
+/***/ }),
+
+/***/ "./js/util/canvas_util.js":
+/*!********************************!*\
+  !*** ./js/util/canvas_util.js ***!
+  \********************************/
+/*! exports provided: drawSolution, drawPath */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "drawSolution", function() { return drawSolution; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "drawPath", function() { return drawPath; });
+const drawSolution = (root, target, ctx) => {
+  const path = [target];
+
+  while(path[0].x !== root.x || path[0].y !== root.y) {
+    let node = path[0].parent;
+    path.unshift(node);
+  }
+
+  const drawStep = () => {
+    path.forEach(node => {
+      drawPath(ctx, node, '#ff2103')
+    });
+  }
+
+  const timer = setInterval(drawStep, 0);
+}
+
+const drawPath = (ctx, node, color) => {
+  ctx.fillStyle = color;
+
+  if(node.parent_connector){
+    ctx.fillRect(node.parent_connector.x * 5, node.parent_connector.y * 5, 5, 5);
+  }
+  ctx.fillRect(node.x * 5, node.y * 5, 5, 5);
+}
 
 
 /***/ })
