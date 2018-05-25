@@ -23,7 +23,7 @@ class Grid {
   }
 
 
-  intersectsPath(node) {
+  intersectsMaze(node) {
     if(this.matrix[node.x][node.y].path) { return true };//if there is already a path node at this space
     node.neighborCoords.forEach(coords => {
       if(this.inBounds(coords[0], coords[1])){
@@ -40,6 +40,8 @@ class Grid {
   }
 
   continuePath(node) {
+
+    node.path = true;
     this.matrix[node.x][node.y] = node;
   }
 

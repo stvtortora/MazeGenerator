@@ -106,7 +106,7 @@ class Grid {
   }
 
 
-  intersectsPath(node) {
+  intersectsMaze(node) {
     if(this.matrix[node.x][node.y].path) { return true };//if there is already a path node at this space
     node.neighborCoords.forEach(coords => {
       if(this.inBounds(coords[0], coords[1])){
@@ -123,6 +123,8 @@ class Grid {
   }
 
   continuePath(node) {
+
+    node.path = true;
     this.matrix[node.x][node.y] = node;
   }
 
@@ -159,14 +161,14 @@ class Node {
       [this.x, this.y + 2],
       [this.x, this.y - 2]
     ]
-    this.children = null;
+    this.children = [];
   }
 
   generateChildren(grid) {
     this.children = this.neighborCoords.map(coords => {
-      const child = new Node(coords, true);
+      const child = new Node(coords, null);
       child.parent = this;
-      const parent_connector = new Node ([(child.x + child.parent.x) / 2, (child.y + child.parent.y) / 2], true);
+      const parent_connector = new Node ([(child.x + child.parent.x) / 2, (child.y + child.parent.y) / 2], null);
       child.parent_connector = parent_connector;
 
       return child;
@@ -174,6 +176,28 @@ class Node {
       return grid.inBounds(child.x, child.y);
     });
   }
+
+  validChildren() {
+    return this.children.filter(child => {
+      return child.path
+    });
+  }
+
+  // generateChildren(grid) {
+  //   this.neighborCoords.forEach(coords => {
+  //     if(grid.inBounds(coords[0], coords[1])){
+  //
+  //       const x = coords[0];
+  //       const y = coords[1];
+  //       const node = grid.matrix[x][y];
+  //       if(!grid.intersectsPath(node)) {
+  //         node.parent = this;
+  //         const parent_connector = grid.matrix[(node.x + node.parent.x) / 2][(node.y + node.parent.y) / 2];
+  //         this.children.push(node);
+  //       }
+  //     }
+  //   });
+  // }
 
   removeChild(reject) {
     const newChildren = this.children.filter(child => {
@@ -224,21 +248,22 @@ const generate_maze = (canvas, rootCoords, gridDimensions) => {
     let randomIndex = Math.floor(Math.random() * options.length);
     let selected = options.splice(randomIndex, 1)[0];
 
-    if(!grid.intersectsPath(selected)) {
+    if(!grid.intersectsMaze(selected)) {
       grid.continuePath(selected);
       Object(_util_canvas_util__WEBPACK_IMPORTED_MODULE_3__["drawPath"])(ctx, selected, "#2ae950");
       selected.generateChildren(grid);
       options = options.concat(selected.children);
 
-    } else {
-      selected.parent.removeChild(selected);
+    // } else {
+    //   selected.parent.removeChild(selected);
     }
   }
 
   while(options.length > 0){
     generationStep();
   }
-  Object(_solvers_dfs_bfs_solver__WEBPACK_IMPORTED_MODULE_2__["default"])(ctx, root, grid.matrix[99][99], 'dfs');
+  debugger
+  Object(_solvers_dfs_bfs_solver__WEBPACK_IMPORTED_MODULE_2__["default"])(ctx, root, grid.matrix[98][98], 'dfs');
 
   // const timer = window.setInterval(generationStep, 0);
 }
@@ -287,21 +312,20 @@ const dfs_bfs_solver = (ctx, root, target, algo) => {
 
   const solutionStep = () => {
     let selected = algo === 'dfs' ? options.pop() : options.shift();
-    debugger
     Object(_util_canvas_util__WEBPACK_IMPORTED_MODULE_0__["drawPath"])(ctx, selected, "#872bc4");
     if(selected.x === target.x && selected.y === target.y) {
-      Object(_util_canvas_util__WEBPACK_IMPORTED_MODULE_0__["drawSolution"])(root, target, ctx);
-      return;
-
-    }
-debugger
-    if(selected.children) {
-      options = options.concat(selected.children);
       debugger
+      Object(_util_canvas_util__WEBPACK_IMPORTED_MODULE_0__["drawSolution"])(root, target, ctx);
+      clearInterval(timer);
+    }
+
+    if(selected.children) {
+
+      options = options.concat(selected.validChildren());
     }
   }
 
-  setInterval(solutionStep, 0);
+  const timer = setInterval(solutionStep, 0);
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (dfs_bfs_solver);
@@ -322,14 +346,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "drawPath", function() { return drawPath; });
 const drawSolution = (root, target, ctx) => {
   const path = [target];
-
+debugger
   while(path[0].x !== root.x || path[0].y !== root.y) {
     let node = path[0].parent;
+    debugger
     path.unshift(node);
   }
 
   const drawStep = () => {
     path.forEach(node => {
+      debugger
       drawPath(ctx, node, '#ff2103')
     });
   }
@@ -339,7 +365,6 @@ const drawSolution = (root, target, ctx) => {
 
 const drawPath = (ctx, node, color) => {
   ctx.fillStyle = color;
-
   if(node.parent_connector){
     ctx.fillRect(node.parent_connector.x * 5, node.parent_connector.y * 5, 5, 5);
   }

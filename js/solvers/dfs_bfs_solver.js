@@ -5,21 +5,20 @@ const dfs_bfs_solver = (ctx, root, target, algo) => {
 
   const solutionStep = () => {
     let selected = algo === 'dfs' ? options.pop() : options.shift();
-    debugger
     drawPath(ctx, selected, "#872bc4");
     if(selected.x === target.x && selected.y === target.y) {
-      drawSolution(root, target, ctx);
-      return;
-
-    }
-debugger
-    if(selected.children) {
-      options = options.concat(selected.children);
       debugger
+      drawSolution(root, target, ctx);
+      clearInterval(timer);
+    }
+
+    if(selected.children) {
+
+      options = options.concat(selected.validChildren());
     }
   }
 
-  setInterval(solutionStep, 0);
+  const timer = setInterval(solutionStep, 0);
 }
 
 export default dfs_bfs_solver;

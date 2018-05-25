@@ -20,21 +20,22 @@ const generate_maze = (canvas, rootCoords, gridDimensions) => {
     let randomIndex = Math.floor(Math.random() * options.length);
     let selected = options.splice(randomIndex, 1)[0];
 
-    if(!grid.intersectsPath(selected)) {
+    if(!grid.intersectsMaze(selected)) {
       grid.continuePath(selected);
       drawPath(ctx, selected, "#2ae950");
       selected.generateChildren(grid);
       options = options.concat(selected.children);
 
-    } else {
-      selected.parent.removeChild(selected);
+    // } else {
+    //   selected.parent.removeChild(selected);
     }
   }
 
   while(options.length > 0){
     generationStep();
   }
-  dfs_bfs_solver(ctx, root, grid.matrix[99][99], 'dfs');
+  debugger
+  dfs_bfs_solver(ctx, root, grid.matrix[98][98], 'dfs');
 
   // const timer = window.setInterval(generationStep, 0);
 }

@@ -12,14 +12,14 @@ class Node {
       [this.x, this.y + 2],
       [this.x, this.y - 2]
     ]
-    this.children = null;
+    this.children = [];
   }
 
   generateChildren(grid) {
     this.children = this.neighborCoords.map(coords => {
-      const child = new Node(coords, true);
+      const child = new Node(coords, null);
       child.parent = this;
-      const parent_connector = new Node ([(child.x + child.parent.x) / 2, (child.y + child.parent.y) / 2], true);
+      const parent_connector = new Node ([(child.x + child.parent.x) / 2, (child.y + child.parent.y) / 2], null);
       child.parent_connector = parent_connector;
 
       return child;
@@ -27,6 +27,28 @@ class Node {
       return grid.inBounds(child.x, child.y);
     });
   }
+
+  validChildren() {
+    return this.children.filter(child => {
+      return child.path
+    });
+  }
+
+  // generateChildren(grid) {
+  //   this.neighborCoords.forEach(coords => {
+  //     if(grid.inBounds(coords[0], coords[1])){
+  //
+  //       const x = coords[0];
+  //       const y = coords[1];
+  //       const node = grid.matrix[x][y];
+  //       if(!grid.intersectsPath(node)) {
+  //         node.parent = this;
+  //         const parent_connector = grid.matrix[(node.x + node.parent.x) / 2][(node.y + node.parent.y) / 2];
+  //         this.children.push(node);
+  //       }
+  //     }
+  //   });
+  // }
 
   removeChild(reject) {
     const newChildren = this.children.filter(child => {
