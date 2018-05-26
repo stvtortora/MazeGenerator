@@ -26,24 +26,12 @@ class Grid {
     return (x >= 0 && x < this.xDim) && (y >= 0 && y < this.yDim)
   }
 
-  intersectsMaze(node) {
-    if(this.matrix[node.x][node.y].visited) { return true };//if there is already a path node at this space
-    node.adjacentCoords.forEach(coords => {
-      if(this.inBounds(coords[0], coords[1])){
-
-        const neighbor = this.matrix[coords[0]][coords[1]];
-
-        if(neighbor !== node.parent && neighbor.visited) {
-          return true;
-        }
-      }
-
-    });
-    return false;
+  canPlace(node) {
+    return !this.matrix[node.x][node.y].onPath;
   }
 
   continuePath(node, ctx) {
-    node.visited = true;
+    node.onPath = true;
     this.matrix[node.x][node.y] = node;
     this.drawPath(ctx, node, "#2ae950");
   }

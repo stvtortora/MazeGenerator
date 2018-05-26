@@ -109,24 +109,12 @@ class Grid {
     return (x >= 0 && x < this.xDim) && (y >= 0 && y < this.yDim)
   }
 
-  intersectsMaze(node) {
-    if(this.matrix[node.x][node.y].visited) { return true };//if there is already a path node at this space
-    node.adjacentCoords.forEach(coords => {
-      if(this.inBounds(coords[0], coords[1])){
-
-        const neighbor = this.matrix[coords[0]][coords[1]];
-
-        if(neighbor !== node.parent && neighbor.visited) {
-          return true;
-        }
-      }
-
-    });
-    return false;
+  canPlace(node) {
+    return !this.matrix[node.x][node.y].onPath;
   }
 
   continuePath(node, ctx) {
-    node.visited = true;
+    node.onPath = true;
     this.matrix[node.x][node.y] = node;
     this.drawPath(ctx, node, "#2ae950");
   }
@@ -172,10 +160,10 @@ class Grid {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 class Node {
-  constructor(rootCoords, visited) {
+  constructor(rootCoords, onPath) {
     this.x = rootCoords[0];
     this.y = rootCoords[1];
-    this.visted = visited;
+    this.onPath = onPath;
     this.parent = null;
     this.parent_connector = null;
     this.children = null;
@@ -197,12 +185,6 @@ class Node {
       return child;
     }).filter(child => {
       return grid.inBounds(child.x, child.y);
-    });
-  }
-
-  validChildren() {
-    return this.children.filter(child => {
-      return child.visited
     });
   }
 
@@ -240,7 +222,7 @@ __webpack_require__.r(__webpack_exports__);
 const generate_maze = (canvas, rootCoords, gridDimensions) => {
   //
   const grid = new _components_grid__WEBPACK_IMPORTED_MODULE_0__["default"](gridDimensions);
-  const root = new _components_node__WEBPACK_IMPORTED_MODULE_1__["default"](rootCoords, true);
+  const root = new _components_node__WEBPACK_IMPORTED_MODULE_1__["default"](rootCoords, null);
   const ctx = canvas.getContext('2d');
   let options = [root];
 
@@ -254,7 +236,7 @@ const generate_maze = (canvas, rootCoords, gridDimensions) => {
     let randomIndex = Math.floor(Math.random() * options.length);
     let selected = options.splice(randomIndex, 1)[0];
 
-    if(!grid.intersectsMaze(selected)) {
+    if(grid.canPlace(selected)) {
       grid.continuePath(selected, ctx);
       selected.generateChildren(grid);
       options = options.concat(selected.children);
@@ -314,6 +296,7 @@ const dfs_bfs_solver = (ctx, root, target, algo, grid) => {
 
   const solutionStep = () => {
     let selected = algo === 'dfs' ? options.pop() : options.shift();
+    debugger
     grid.drawPath(ctx, selected, "#000000");
     if(selected.x === target.x && selected.y === target.y) {
       debugger
@@ -321,10 +304,11 @@ const dfs_bfs_solver = (ctx, root, target, algo, grid) => {
       clearInterval(timer);
     }
 
-    if(selected.children) {
-
-      options = options.concat(selected.validChildren());
-    }
+    selected.children.forEach(child => {
+      if (child.onPath) {
+        options.push(child);
+      };
+    });
   }
 
   const timer = setInterval(solutionStep, 0);

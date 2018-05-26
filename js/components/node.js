@@ -1,8 +1,8 @@
 class Node {
-  constructor(rootCoords, visited) {
+  constructor(rootCoords, onPath) {
     this.x = rootCoords[0];
     this.y = rootCoords[1];
-    this.visted = visited;
+    this.onPath = onPath;
     this.parent = null;
     this.parent_connector = null;
     this.children = null;
@@ -24,12 +24,6 @@ class Node {
       return child;
     }).filter(child => {
       return grid.inBounds(child.x, child.y);
-    });
-  }
-
-  validChildren() {
-    return this.children.filter(child => {
-      return child.visited
     });
   }
 

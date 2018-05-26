@@ -5,7 +5,7 @@ import dfs_bfs_solver from '../solvers/dfs_bfs_solver';import { drawPath } from 
 const generate_maze = (canvas, rootCoords, gridDimensions) => {
   //
   const grid = new Grid(gridDimensions);
-  const root = new Node(rootCoords, true);
+  const root = new Node(rootCoords, null);
   const ctx = canvas.getContext('2d');
   let options = [root];
 
@@ -19,7 +19,7 @@ const generate_maze = (canvas, rootCoords, gridDimensions) => {
     let randomIndex = Math.floor(Math.random() * options.length);
     let selected = options.splice(randomIndex, 1)[0];
 
-    if(!grid.intersectsMaze(selected)) {
+    if(grid.canPlace(selected)) {
       grid.continuePath(selected, ctx);
       selected.generateChildren(grid);
       options = options.concat(selected.children);

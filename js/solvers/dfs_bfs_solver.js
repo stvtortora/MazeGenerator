@@ -5,6 +5,7 @@ const dfs_bfs_solver = (ctx, root, target, algo, grid) => {
 
   const solutionStep = () => {
     let selected = algo === 'dfs' ? options.pop() : options.shift();
+    debugger
     grid.drawPath(ctx, selected, "#000000");
     if(selected.x === target.x && selected.y === target.y) {
       debugger
@@ -12,10 +13,11 @@ const dfs_bfs_solver = (ctx, root, target, algo, grid) => {
       clearInterval(timer);
     }
 
-    if(selected.children) {
-
-      options = options.concat(selected.validChildren());
-    }
+    selected.children.forEach(child => {
+      if (child.onPath) {
+        options.push(child);
+      };
+    });
   }
 
   const timer = setInterval(solutionStep, 0);
