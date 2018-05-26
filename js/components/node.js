@@ -1,22 +1,21 @@
-
 class Node {
-  constructor(rootCoords, path) {
+  constructor(rootCoords, visited) {
     this.x = rootCoords[0];
     this.y = rootCoords[1];
-    this.path = path;
+    this.visted = visited;
     this.parent = null;
     this.parent_connector = null;
-    this.neighborCoords = [
+    this.children = null;
+    this.adjacentCoords = [
       [this.x + 2, this.y],
       [this.x - 2, this.y],
       [this.x, this.y + 2],
       [this.x, this.y - 2]
     ]
-    this.children = [];
   }
 
   generateChildren(grid) {
-    this.children = this.neighborCoords.map(coords => {
+    this.children = this.adjacentCoords.map(coords => {
       const child = new Node(coords, null);
       child.parent = this;
       const parent_connector = new Node ([(child.x + child.parent.x) / 2, (child.y + child.parent.y) / 2], null);
@@ -30,25 +29,9 @@ class Node {
 
   validChildren() {
     return this.children.filter(child => {
-      return child.path
+      return child.visited
     });
   }
-
-  // generateChildren(grid) {
-  //   this.neighborCoords.forEach(coords => {
-  //     if(grid.inBounds(coords[0], coords[1])){
-  //
-  //       const x = coords[0];
-  //       const y = coords[1];
-  //       const node = grid.matrix[x][y];
-  //       if(!grid.intersectsPath(node)) {
-  //         node.parent = this;
-  //         const parent_connector = grid.matrix[(node.x + node.parent.x) / 2][(node.y + node.parent.y) / 2];
-  //         this.children.push(node);
-  //       }
-  //     }
-  //   });
-  // }
 
   removeChild(reject) {
     const newChildren = this.children.filter(child => {
