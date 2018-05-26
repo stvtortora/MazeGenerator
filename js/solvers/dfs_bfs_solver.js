@@ -1,4 +1,4 @@
-import { drawPath, drawSolution } from '../util/canvas_util';
+
 
 const dfs_bfs_solver = (ctx, root, target, algo, grid) => {
   let options = [root];

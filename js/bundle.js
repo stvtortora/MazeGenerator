@@ -150,6 +150,58 @@ class Grid {
 
 /***/ }),
 
+/***/ "./js/components/heap.js":
+/*!*******************************!*\
+  !*** ./js/components/heap.js ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+class Heap {
+  constructor(comparator, root) {
+    this.comparator = comparator;
+    this.array = [root];
+    this.length = 1;
+  }
+
+  shift() {
+    this.length--;
+    return this.array.shift();
+  }
+
+  push(node) {
+    this.array.push(node);
+    this.length++;
+    this.heapify();
+  }
+
+  swap(x, y) {
+    let temp = this.array[x];
+    this.array[x] = this.array[y];
+    this.array[y] = temp;
+  }
+
+  heapify() {
+    let index = this.length - 1;
+    let parentIndex = Math.floor((index - 1) / 2);
+debugger
+    while(parentIndex > -1 && this.comparator(this.array[parentIndex], this.array[index])) {
+      debugger
+      this.swap(parentIndex, index);
+      index = parentIndex;
+      parentIndex =  Math.floor((index - 1) / 2);
+    }
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Heap);
+
+
+/***/ }),
+
 /***/ "./js/components/node.js":
 /*!*******************************!*\
   !*** ./js/components/node.js ***!
@@ -173,6 +225,9 @@ class Node {
       [this.x, this.y + 2],
       [this.x, this.y - 2]
     ]
+    this.gVal = null;
+    this.hVal = null;
+    this.fVal = null;
   }
 
   generateChildren(grid) {
@@ -188,13 +243,6 @@ class Node {
     });
   }
 
-  removeChild(reject) {
-    const newChildren = this.children.filter(child => {
-      return child.x !== reject.x && child.y !== reject.y;
-    });
-
-    this.children = newChildren;
-  }
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Node);
@@ -214,7 +262,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_grid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/grid */ "./js/components/grid.js");
 /* harmony import */ var _components_node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/node */ "./js/components/node.js");
 /* harmony import */ var _solvers_dfs_bfs_solver__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../solvers/dfs_bfs_solver */ "./js/solvers/dfs_bfs_solver.js");
-/* harmony import */ var _util_canvas_util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/canvas_util */ "./js/util/canvas_util.js");
+/* harmony import */ var _solvers_a_star_solver__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../solvers/a_star_solver */ "./js/solvers/a_star_solver.js");
+
 
 
 
@@ -247,7 +296,7 @@ const generate_maze = (canvas, rootCoords, gridDimensions) => {
     generationStep();
   }
   debugger
-  Object(_solvers_dfs_bfs_solver__WEBPACK_IMPORTED_MODULE_2__["default"])(ctx, root, grid.matrix[98][98], 'dfs', grid);
+  Object(_solvers_a_star_solver__WEBPACK_IMPORTED_MODULE_3__["default"])(ctx, root, grid.matrix[98][98], 'dfs', grid);
 
   // const timer = window.setInterval(generationStep, 0);
 }
@@ -272,9 +321,64 @@ __webpack_require__.r(__webpack_exports__);
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById('maze');
   canvas.addEventListener("click", () => {
-    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(canvas, [0, 0], [100, 100]);
+    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(canvas, [50, 50], [100, 100]);
   });
 });
+
+
+/***/ }),
+
+/***/ "./js/solvers/a_star_solver.js":
+/*!*************************************!*\
+  !*** ./js/solvers/a_star_solver.js ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_heap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/heap */ "./js/components/heap.js");
+
+
+const a_star_solver = (ctx, root, target, algo, grid) => {
+  const euclideanDist = (current, target) => {
+    return Math.sqrt(
+      Math.pow((target.x - current.x), 2) +
+      Math.pow((target.y - current.y), 2)
+    )
+  };
+
+  const comparator = (node1, node2) => {
+    return node1.fVal > node2.fVal;
+  }
+
+  root.gVal = 0;
+  let options = new _components_heap__WEBPACK_IMPORTED_MODULE_0__["default"](comparator, root);
+
+  const solutionStep = () => {
+    let selected = options.shift();
+
+    grid.drawPath(ctx, selected, "#000000");
+    if(selected.x === target.x && selected.y === target.y) {
+
+      grid.drawSolution(root, target, ctx);
+      clearInterval(timer);
+    }
+
+    selected.children.forEach(child => {
+      if (child.onPath) {
+        child.gVal = child.parent.gVal + 1;
+        child.hVal = euclideanDist(child, target);
+        child.fVal = child.gVal + child.hVal;
+        options.push(child);
+      };
+    });
+  }
+
+  const timer = setInterval(solutionStep, 0);
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (a_star_solver);
 
 
 /***/ }),
@@ -288,7 +392,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _util_canvas_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/canvas_util */ "./js/util/canvas_util.js");
 
 
 const dfs_bfs_solver = (ctx, root, target, algo, grid) => {
@@ -315,47 +418,6 @@ const dfs_bfs_solver = (ctx, root, target, algo, grid) => {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (dfs_bfs_solver);
-
-
-/***/ }),
-
-/***/ "./js/util/canvas_util.js":
-/*!********************************!*\
-  !*** ./js/util/canvas_util.js ***!
-  \********************************/
-/*! exports provided: drawSolution, drawPath */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "drawSolution", function() { return drawSolution; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "drawPath", function() { return drawPath; });
-const drawSolution = (root, target, ctx) => {
-  const path = [target];
-debugger
-  while(path[0].x !== root.x || path[0].y !== root.y) {
-    let node = path[0].parent;
-    debugger
-    path.unshift(node);
-  }
-
-  const drawStep = () => {
-    path.forEach(node => {
-      debugger
-      drawPath(ctx, node, '#ff2103')
-    });
-  }
-
-  const timer = setInterval(drawStep, 0);
-}
-
-const drawPath = (ctx, node, color) => {
-  ctx.fillStyle = color;
-  if(node.parent_connector){
-    ctx.fillRect(node.parent_connector.x * 5, node.parent_connector.y * 5, 5, 5);
-  }
-  ctx.fillRect(node.x * 5, node.y * 5, 5, 5);
-}
 
 
 /***/ })

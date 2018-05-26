@@ -1,6 +1,7 @@
 import Grid from '../components/grid';
 import Node from '../components/node';
-import dfs_bfs_solver from '../solvers/dfs_bfs_solver';import { drawPath } from '../util/canvas_util';
+import dfs_bfs_solver from '../solvers/dfs_bfs_solver';
+import a_star_solver from '../solvers/a_star_solver';
 
 const generate_maze = (canvas, rootCoords, gridDimensions) => {
   //
@@ -30,7 +31,7 @@ const generate_maze = (canvas, rootCoords, gridDimensions) => {
     generationStep();
   }
   debugger
-  dfs_bfs_solver(ctx, root, grid.matrix[98][98], 'dfs', grid);
+  a_star_solver(ctx, root, grid.matrix[98][98], 'dfs', grid);
 
   // const timer = window.setInterval(generationStep, 0);
 }

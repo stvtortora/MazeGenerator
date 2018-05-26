@@ -12,6 +12,9 @@ class Node {
       [this.x, this.y + 2],
       [this.x, this.y - 2]
     ]
+    this.gVal = null;
+    this.hVal = null;
+    this.fVal = null;
   }
 
   generateChildren(grid) {
@@ -27,13 +30,6 @@ class Node {
     });
   }
 
-  removeChild(reject) {
-    const newChildren = this.children.filter(child => {
-      return child.x !== reject.x && child.y !== reject.y;
-    });
-
-    this.children = newChildren;
-  }
 }
 
 export default Node;
