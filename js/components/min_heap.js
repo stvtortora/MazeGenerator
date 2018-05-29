@@ -1,4 +1,4 @@
-class Heap {
+class MinHeap {
   constructor(comparator, root) {
     this.comparator = comparator;
     this.array = [root];
@@ -25,9 +25,8 @@ class Heap {
   heapify() {
     let index = this.length - 1;
     let parentIndex = Math.floor((index - 1) / 2);
-debugger
+
     while(parentIndex > -1 && this.comparator(this.array[parentIndex], this.array[index])) {
-      debugger
       this.swap(parentIndex, index);
       index = parentIndex;
       parentIndex =  Math.floor((index - 1) / 2);
@@ -36,4 +35,4 @@ debugger
 
 }
 
-export default Heap;
+export default MinHeap;

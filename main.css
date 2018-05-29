@@ -1,4 +1,52 @@
-canvas {
+.canvas {
+  height: 500px;
+  width: 500px;
   background-color: #2b72c4;
   padding: 5px;
+  margin: 10px;
+}
+
+.canvas-container {
+  width: 50%;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+}
+
+
+
+/* .description {
+} */
+
+/* .intro {
+  margin:auto;
+  width: 500px;
+}
+
+body {
+  align-items: center;
+}
+
+
+.maze_demonstration{
+  width: 500px;
+  margin:auto;
+  align-items: center;
+} */
+
+
+
+/* .text {
+  width: 800px;
+  margin-left: -200px;
+} */
+.description {
+  margin: 10px;
+}
+
+.maze_demonstration {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }

@@ -5,8 +5,148 @@
     <title>Maze Generator</title>
     <script type="application/javascript" src="js/bundle.js"></script>
     <link rel="stylesheet" href="./main.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato|Roboto" rel="stylesheet">
   </head>
   <body>
-    <canvas id="maze" width="500" height="500"></canvas>
+    <div class='intro'>
+      <h3>Maze Generator</h3>
+      <p>In this demonstration, we will take a look at 5 algorithms for generating and solving mazes.</p>
+    </div>
+    <div class='maze_demonstration'>
+        <div class="description">
+          <h3>Depth First Search</h3>
+          <p>Before we get to solving a maze, let's see some examples of how one can be generated.
+            DFS, a common algorithm for traversing and searching trees and graphs, is a good place to start. Here's how it works: <br/>
+            <br/>
+            1. Initialize a stack with a single node.<br/>
+            2. Pop a node from the stack. <br/>
+            3. Push each of the node's unvisited children onto the stack. <br/>
+            4. Repeat step two onward until the stack is empty. <br/>
+            <br/>
+            As we can see in figure 1, dfs doesn't create much of a maze when implemented strictly: <br/>
+            <br/>
+          </p>
+        </div>
+        <canvas class="canvas" id="1" width="500" height="500">Figure 1</canvas><br/>
+    </div>
+    <div class='maze_demonstration'>
+      <div class='canvas-container'>
+        <canvas class="canvas" id="2" width="500" height="500">Figure 2</canvas>
+      </div>
+      <div class="description">
+        By amending steps 2 and 3, we can overcome this. Here are the changes: <br/>
+        <br/>
+        2. Look at the next node on the stack.<br/>
+        3. If the node has unvisited children, push a random one onto the stack. Else, pop the node from the stack.<br/>
+        <br/>xw
+        Now if we look at figure 2, we see a much more convincing maze.<br/>
+      </div>
+      <br/>
+    </div>
+    <div class='maze_demonstration'>
+      <div class="description">
+        <h3>Prim's Algorithm</h3>
+
+          <p>
+            The next algorithm we'll check out is Prim's. Here's a high-level overview of how it works: <br/>
+
+            1. Choose a node as the root, and store it in a set.<br/>
+            2. Select the node in the set that would result in the least cost to travel to.<br/>
+            3. Add the node to the maze unless it will cause a loop.<br/>
+            4. Add the node's children to the set.<br/>
+            4. Remove the node from the set.<br/>
+            5. Repeat steps 2-4 until the set is empty.<br/>
+            <br/>
+
+            Notice that step two requires we select the node that would result it the least cost (minimum distance in our case) to travel to. <br/>
+            However, since each vertex in our maze spans exactly the same distance, this step is irrelevant to us. We can modfiy Prim's algorithm slightly to account for this. Here's our new step 2: <br/>
+            <br/>
+
+            2. Select a random node from the set. <br/>
+            <br/>
+            Thats it! Checkout figure 3 to see our modfied Prim's in action.
+            <br/>
+          </p>
+        <br/>
+      </div>
+      <canvas class="canvas" id="3" width="500" height="500">Figure 3</canvas>
+    </div>
+
+    <div class='maze_demonstration'>
+      <div class='canvas-container'>
+        <canvas class="canvas" id="4" width="500" height="500">Figure 3</canvas>
+      </div>
+      <div class="description">
+        <h3>Kruskal's Algorithm</h3>
+
+        <p>
+          The last maze generation algorithm we'll discuss is Kruskal's. Here's an overview:<br/>
+
+          1. Randomly iterate through all walls of the maze. <br/>
+          2. If the two nodes a wall separates belong to different sets, remove the wall between them. This joins the two into the same set. <br/>
+          <br/>
+          <br/>
+
+            By interating over each wall in the maze, we consider each pair of adjacent path nodes. Since we connect any two path nodes that are not already in the same set, all path nodes will be in the same set by the end of the process.
+            In other words, the maze will be fully integrated; you'll be able to traverse to any path node from any other.<br/>
+          <br/>
+          <br/>
+
+        </p>
+
+        <br/>
+      </div>
+    </div>
+
+    <div class="maze_demonstration">
+      <div class="description">
+        <h3>Depth First Search (Again)</h3>
+
+          <p>And now, the moment we've been waiting for! We're going to solve a maze this time, using our ol' pal DFS. When it comes to searching rather than constructing a maze with dfs, there's one crucial difference to attend to. Here's our new step 4:<br/>
+            <br/>
+
+          4. Repeat step two onward until the target is found. <br/>
+          By terminating the process when our target is reached, we avoid unecessary iterations!
+          <br/>
+          <br/>
+        </p>
+      </div>
+      <canvas class="canvas" id="5" width="500" height="500">Figure 4</canvas>
+    </div>
+    <div class="maze_demonstration">
+      <canvas class="canvas" id="6" width="500" height="500">Figure 5</canvas>
+      <div class="description">
+        <h3>Breadth First Search</h3>
+        <p>
+          BFS works similarly to DFS. As the name implies, it distinguishes itself by visiting a root's sibilings first, rather than it's children. We accomplish this by substituing our stack from DFS with a queue.
+        </p><br/>
+        <br/>
+      </div>
+    </div>
+    <div class="maze_demonstration">
+      <div class="description">
+        <h3>A*</h3>
+
+          <p>
+            The last algorithm we'll look at is A*. An extension of Dijkstra's algorithm, A* proceeds with the following steps:<br/>
+            <br/>
+
+            1. Initialize a set with a single node.<br/>
+            2. Choose the node from the set with the least f-value, and remove it from the set.<br/>
+            3. For each of the node's children:<br/>
+            3a. Calculate the f value of each of the node's children.<br/>
+            3b. If there is a visited node with the same coordinates and a lower f-value as this child, discard the child. Else, add it to the set.<br/>
+            4. Repeat steps 2-3 until the target is reached.<br/>
+            <br/>
+
+
+            A node's f-value is calculated by adding it's g-value to it's h-value. A node's g-value is simply how many steps away it is from the root, and it's h-value is it's euclidean distance from the target.
+            A* is a 'smart' algorithm, in that it uses the a node's f-value as a heuristic 'guess' how likely it is to be closest to the target. It selects the node with the least f in attempt to reach the target faster.
+            <br/>
+        </p>
+        <br/>
+      </div>
+      <canvas class="canvas" id="7" width="500" height="500">Figure 6</canvas>
+    </div>
   </body>
 </html>

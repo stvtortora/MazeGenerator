@@ -1,39 +1,16 @@
 import Grid from '../components/grid';
 import Node from '../components/node';
-import dfs_bfs_solver from '../solvers/dfs_bfs_solver';
-import a_star_solver from '../solvers/a_star_solver';
 
-const generate_maze = (canvas, rootCoords, gridDimensions) => {
-  //
+const maze = (maze_generator, canvasId, rootCoords, gridDimensions, solve_algo, gen_algo) => {
   const grid = new Grid(gridDimensions);
   const root = new Node(rootCoords, null);
-  const ctx = canvas.getContext('2d');
-  let options = [root];
-
-  const generationStep = () => {
-    // if(options.length === 0) {
-    //   window.clearInterval(timer);
-    //   dfs_bfs_solver(ctx, root, grid.matrix[99][99], 'dfs');
-    //   return;
-    // };
-
-    let randomIndex = Math.floor(Math.random() * options.length);
-    let selected = options.splice(randomIndex, 1)[0];
-
-    if(grid.canPlace(selected)) {
-      grid.continuePath(selected, ctx);
-      selected.generateChildren(grid);
-      options = options.concat(selected.children);
-    }
-  }
-
-  while(options.length > 0){
-    generationStep();
-  }
-  debugger
-  a_star_solver(ctx, root, grid.matrix[98][98], 'dfs', grid);
-
-  // const timer = window.setInterval(generationStep, 0);
+  // const root = grid.matrix[rootCoords[0]][rootCoords[1]];
+  const canvas = document.getElementById(canvasId);
+  canvas.addEventListener("click", ()=> {
+    debugger
+    maze_generator(grid, root, canvas, solve_algo, gen_algo);
+  });
 }
 
-export default generate_maze;
+
+export default maze;
