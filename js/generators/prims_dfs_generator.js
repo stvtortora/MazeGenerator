@@ -1,8 +1,7 @@
 import maze_solver from '../solvers/maze_solver';
 
-const primsDfsGenerator = (grid, root, canvas, solve_algo, gen_algo) => {
+const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
 
-  const ctx = canvas.getContext('2d');
   let options = [root];
 
   const generationStep = () => {
@@ -19,12 +18,11 @@ const primsDfsGenerator = (grid, root, canvas, solve_algo, gen_algo) => {
     } else{
       selected = options.pop();
     }
-debugger
+
 
     if(grid.openAt(selected.x, selected.y)) {
       grid.continuePath(selected, ctx);
       selected.generateChildren(grid);
-debugger
       options = options.concat(selected.children);
     }
   }
@@ -33,6 +31,7 @@ debugger
     while(options.length > 0){
       generationStep();
     }
+    debugger
     maze_solver(ctx, root, grid.matrix[48][48], grid, solve_algo);
   } else{
     const timer = window.setInterval(generationStep, 0);

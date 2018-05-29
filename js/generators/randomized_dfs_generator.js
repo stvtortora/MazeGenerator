@@ -1,6 +1,6 @@
 import maze_solver from '../solvers/maze_solver';
 
-const randomized_dfs_generator = (grid, root, canvas, algo) => {
+const randomized_dfs_generator = (grid, root, ctx, algo) => {
   const shuffle = (array) => {
     for(let i = 0; i < array.length; i++) {
       let j = Math.floor(Math.random() * array.length);
@@ -9,7 +9,6 @@ const randomized_dfs_generator = (grid, root, canvas, algo) => {
     return array;
   }
 
-  const ctx = canvas.getContext('2d');
   grid.continuePath(root, ctx);
   let options = [root];
 

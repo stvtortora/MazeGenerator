@@ -1,7 +1,7 @@
 import maze_solver from '../solvers/maze_solver';
 import DisjointSet from '../components/disjoint_set';
 
-const kruskals_generator = (grid, root, canvas, algo) => {
+const kruskals_generator = (grid, root, ctx, algo) => {
   const disjointSet = new DisjointSet;
   const flatten = (array) => {
     let flattened = [];
@@ -32,7 +32,6 @@ const kruskals_generator = (grid, root, canvas, algo) => {
     return array;
   }
 
-  const ctx = canvas.getContext('2d');
   let options = rejectWalls(flatten(grid.matrix));
 debugger
 

@@ -1,6 +1,6 @@
 import maze_solver from '../solvers/maze_solver';
 
-const recursive_backtrack_generator = (grid, root, canvas, algo) => {
+const recursive_backtrack_generator = (grid, root, ctx, algo) => {
   const shuffle = (array) => {
     for(let i = 0; i < array.length; i++) {
       let j = Math.floor(Math.random() * array.length);
@@ -8,9 +8,6 @@ const recursive_backtrack_generator = (grid, root, canvas, algo) => {
     }
     return array;
   }
-
-  const ctx = canvas.getContext('2d');
-
 
   const generationStep = (node) => {
 

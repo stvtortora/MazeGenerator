@@ -148,6 +148,7 @@ class Grid {
   }
 
   drawSolution (root, target, ctx) {
+    debugger
     const path = [target];
     while(path[0].x !== root.x || path[0].y !== root.y) {
       let node = path[0].parent;
@@ -156,11 +157,11 @@ class Grid {
 
     const drawStep = () => {
       path.forEach(node => {
-        this.drawPath(ctx, node, '#ff2103')
+        this.drawPath(ctx, node, '#ff2103');
       });
     }
 
-    const timer = setInterval(drawStep, 0);
+    drawStep();
   }
 
   drawPath(ctx, node, color) {
@@ -305,7 +306,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const kruskals_generator = (grid, root, canvas, algo) => {
+const kruskals_generator = (grid, root, ctx, algo) => {
   const disjointSet = new _components_disjoint_set__WEBPACK_IMPORTED_MODULE_1__["default"];
   const flatten = (array) => {
     let flattened = [];
@@ -336,7 +337,6 @@ const kruskals_generator = (grid, root, canvas, algo) => {
     return array;
   }
 
-  const ctx = canvas.getContext('2d');
   let options = rejectWalls(flatten(grid.matrix));
 debugger
 
@@ -402,13 +402,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const maze = (maze_generator, canvasId, rootCoords, gridDimensions, solve_algo, gen_algo) => {
-  const grid = new _components_grid__WEBPACK_IMPORTED_MODULE_0__["default"](gridDimensions);
-  const root = new _components_node__WEBPACK_IMPORTED_MODULE_1__["default"](rootCoords, null);
-  // const root = grid.matrix[rootCoords[0]][rootCoords[1]];
   const canvas = document.getElementById(canvasId);
+
   canvas.addEventListener("click", ()=> {
+    const grid = new _components_grid__WEBPACK_IMPORTED_MODULE_0__["default"](gridDimensions);
+    const root = new _components_node__WEBPACK_IMPORTED_MODULE_1__["default"](rootCoords, null);
+    const ctx = canvas.getContext('2d');
     debugger
-    maze_generator(grid, root, canvas, solve_algo, gen_algo);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    debugger
+    maze_generator(grid, root, ctx, solve_algo, gen_algo);
   });
 }
 
@@ -430,9 +433,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _solvers_maze_solver__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../solvers/maze_solver */ "./js/solvers/maze_solver.js");
 
 
-const primsDfsGenerator = (grid, root, canvas, solve_algo, gen_algo) => {
+const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
 
-  const ctx = canvas.getContext('2d');
   let options = [root];
 
   const generationStep = () => {
@@ -449,12 +451,11 @@ const primsDfsGenerator = (grid, root, canvas, solve_algo, gen_algo) => {
     } else{
       selected = options.pop();
     }
-debugger
+
 
     if(grid.openAt(selected.x, selected.y)) {
       grid.continuePath(selected, ctx);
       selected.generateChildren(grid);
-debugger
       options = options.concat(selected.children);
     }
   }
@@ -463,6 +464,7 @@ debugger
     while(options.length > 0){
       generationStep();
     }
+    debugger
     Object(_solvers_maze_solver__WEBPACK_IMPORTED_MODULE_0__["default"])(ctx, root, grid.matrix[48][48], grid, solve_algo);
   } else{
     const timer = window.setInterval(generationStep, 0);
@@ -486,7 +488,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _solvers_maze_solver__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../solvers/maze_solver */ "./js/solvers/maze_solver.js");
 
 
-const randomized_dfs_generator = (grid, root, canvas, algo) => {
+const randomized_dfs_generator = (grid, root, ctx, algo) => {
   const shuffle = (array) => {
     for(let i = 0; i < array.length; i++) {
       let j = Math.floor(Math.random() * array.length);
@@ -495,7 +497,6 @@ const randomized_dfs_generator = (grid, root, canvas, algo) => {
     return array;
   }
 
-  const ctx = canvas.getContext('2d');
   grid.continuePath(root, ctx);
   let options = [root];
 
@@ -566,6 +567,14 @@ document.addEventListener("DOMContentLoaded", () => {
     Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], '5', [0, 0], [50, 50], 'dfs', 'prims');
     Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], '6', [0, 0], [50, 50], 'bfs', 'prims');
     Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], '7', [0, 0], [50, 50], 'a*', 'prims');
+
+    const mazeIds = ['1', '2', '3', '4', '5', '6', '7'].forEach(id => {
+      const canvas = document.getElementById(id);
+      const ctx = canvas.getContext('2d');
+      ctx.font = '30px sans-serif'
+      ctx.fillStyle = 'white';
+      ctx.fillText("Click to View Maze", 100, canvas.height/2);
+    });
 });
 
 
@@ -598,7 +607,7 @@ const maze_solver = (ctx, root, target, grid, algo) => {
 
   const solutionStep = () => {
     let selected = algo === 'dfs' ? options.pop() : options.shift();
-    grid.drawPath(ctx, selected, "#000000");
+    grid.drawPath(ctx, selected, '#fffbfb');
 
     if(selected.x === target.x && selected.y === target.y) {
 

@@ -1,52 +1,51 @@
 .canvas {
   height: 500px;
   width: 500px;
-  background-color: #2b72c4;
+  background-color: black;
   padding: 5px;
   margin: 10px;
 }
 
 .canvas-container {
   width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 body {
   font-family: 'Lato', sans-serif;
-}
-
-
-
-/* .description {
-} */
-
-/* .intro {
-  margin:auto;
-  width: 500px;
-}
-
-body {
+  color: white;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  background-color: black;
 }
 
+h2 {
+  padding: 20px;
+}
 
-.maze_demonstration{
-  width: 500px;
-  margin:auto;
+.intro {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-} */
+  margin-bottom: 20px;
+  color: '#fffbfb';
+}
 
-
-
-/* .text {
-  width: 800px;
-  margin-left: -200px;
-} */
 .description {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin: 10px;
+  width: 50%;
+  color: '#fffbfb';
 }
 
 .maze_demonstration {
   display: flex;
   flex-direction: row;
   align-items: center;
+  color: inherit;
 }

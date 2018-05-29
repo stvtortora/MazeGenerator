@@ -15,7 +15,7 @@ const maze_solver = (ctx, root, target, grid, algo) => {
 
   const solutionStep = () => {
     let selected = algo === 'dfs' ? options.pop() : options.shift();
-    grid.drawPath(ctx, selected, "#000000");
+    grid.drawPath(ctx, selected, '#fffbfb');
 
     if(selected.x === target.x && selected.y === target.y) {
 

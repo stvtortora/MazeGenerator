@@ -9,9 +9,11 @@
   </head>
   <body>
     <div class='intro'>
-      <h3>Maze Generator</h3>
-      <p>In this demonstration, we will take a look at 5 algorithms for generating and solving mazes.</p>
+      <h1>Maze Generator</h1>
+      <p>In this demonstration, we will take a look at 5 algorithms for generating and solving mazes. </p>
+      <strong>Click any box to view a maze.</strong>
     </div>
+    <h2>Phase 1: Generating Mazes</h2>
     <div class='maze_demonstration'>
         <div class="description">
           <h3>Depth First Search</h3>
@@ -23,23 +25,27 @@
             3. Push each of the node's unvisited children onto the stack. <br/>
             4. Repeat step two onward until the stack is empty. <br/>
             <br/>
-            As we can see in figure 1, dfs doesn't create much of a maze when implemented strictly: <br/>
+            As we when we click figure 1, DFS doesn't create much of a maze when implemented strictly.<br/>
             <br/>
           </p>
         </div>
-        <canvas class="canvas" id="1" width="500" height="500">Figure 1</canvas><br/>
+        <div class='canvas-container'>
+          <canvas class="canvas" id="1" width="490" height="490">Figure 1</canvas><br/>
+          <strong>Figure 1</strong>
+        </div>
     </div>
     <div class='maze_demonstration'>
       <div class='canvas-container'>
-        <canvas class="canvas" id="2" width="500" height="500">Figure 2</canvas>
+        <canvas class="canvas" id="2" width="490" height="490">Figure 2</canvas>
+        <strong>Figure 2</strong>
       </div>
       <div class="description">
-        By amending steps 2 and 3, we can overcome this. Here are the changes: <br/>
+        By amending steps 2 and 3 of our algorithm, DFS can create a maze. Here are the changes: <br/>
         <br/>
         2. Look at the next node on the stack.<br/>
         3. If the node has unvisited children, push a random one onto the stack. Else, pop the node from the stack.<br/>
-        <br/>xw
-        Now if we look at figure 2, we see a much more convincing maze.<br/>
+        <br/>
+        Now if we click on figure 2, we get a much more convincing maze.<br/>
       </div>
       <br/>
     </div>
@@ -49,7 +55,7 @@
 
           <p>
             The next algorithm we'll check out is Prim's. Here's a high-level overview of how it works: <br/>
-
+            <br/>
             1. Choose a node as the root, and store it in a set.<br/>
             2. Select the node in the set that would result in the least cost to travel to.<br/>
             3. Add the node to the maze unless it will cause a loop.<br/>
@@ -58,32 +64,36 @@
             5. Repeat steps 2-4 until the set is empty.<br/>
             <br/>
 
-            Notice that step two requires we select the node that would result it the least cost (minimum distance in our case) to travel to. <br/>
+            Notice that step two requires we select the node that would result it the least cost to travel to. In our case, least cost translates to least distance.
             However, since each vertex in our maze spans exactly the same distance, this step is irrelevant to us. We can modfiy Prim's algorithm slightly to account for this. Here's our new step 2: <br/>
             <br/>
 
             2. Select a random node from the set. <br/>
             <br/>
-            Thats it! Checkout figure 3 to see our modfied Prim's in action.
+            Thats it! Click on figure 3 to see our randomized Prim's algorithm in action.
             <br/>
           </p>
         <br/>
       </div>
-      <canvas class="canvas" id="3" width="500" height="500">Figure 3</canvas>
+      <div class=canvas-container>
+        <canvas class="canvas" id="3" width="490" height="490">Figure 3</canvas>
+        <strong>Figure 3</strong>
+      </div>
     </div>
 
     <div class='maze_demonstration'>
       <div class='canvas-container'>
-        <canvas class="canvas" id="4" width="500" height="500">Figure 3</canvas>
+        <canvas class="canvas" id="4" width="490" height="490">Figure 3</canvas>
+        <strong>Figure 4</strong>
       </div>
       <div class="description">
         <h3>Kruskal's Algorithm</h3>
 
         <p>
           The last maze generation algorithm we'll discuss is Kruskal's. Here's an overview:<br/>
-
-          1. Randomly iterate through all walls of the maze. <br/>
-          2. If the two nodes a wall separates belong to different sets, remove the wall between them. This joins the two into the same set. <br/>
+          <br/>
+          1. Randomly iterate through all vertices (walls) of the maze. <br/>
+          2. If the two nodes separated by the wall belong to different sets, remove the wall between them. This joins the two into the same set. <br/>
           <br/>
           <br/>
 
@@ -97,24 +107,31 @@
         <br/>
       </div>
     </div>
-
+    <h2>Phase 2: Solving Mazes</h2>
     <div class="maze_demonstration">
       <div class="description">
         <h3>Depth First Search (Again)</h3>
 
-          <p>And now, the moment we've been waiting for! We're going to solve a maze this time, using our ol' pal DFS. When it comes to searching rather than constructing a maze with dfs, there's one crucial difference to attend to. Here's our new step 4:<br/>
+          <p>We're going to use DFS to solve a maze this time. When it comes to searching rather than constructing a maze with this algorithm, there's one crucial difference to attend to. Here's our new step 4:<br/>
             <br/>
 
           4. Repeat step two onward until the target is found. <br/>
+          <br/>
           By terminating the process when our target is reached, we avoid unecessary iterations!
           <br/>
           <br/>
         </p>
       </div>
-      <canvas class="canvas" id="5" width="500" height="500">Figure 4</canvas>
+      <div class="canvas-container">
+        <canvas class="canvas" id="5" width="490" height="490">Figure 4</canvas>
+        <strong>Figure 5</strong>
+      </div>
     </div>
     <div class="maze_demonstration">
-      <canvas class="canvas" id="6" width="500" height="500">Figure 5</canvas>
+      <div class='canvas-container'>
+        <canvas class="canvas" id="6" width="490" height="490">Figure 5</canvas>
+        <strong>Figure 6</strong>
+      </div>
       <div class="description">
         <h3>Breadth First Search</h3>
         <p>
@@ -146,7 +163,10 @@
         </p>
         <br/>
       </div>
-      <canvas class="canvas" id="7" width="500" height="500">Figure 6</canvas>
+      <div class="canvas-container">
+        <canvas class="canvas" id="7" width="490" height="490">Figure 6</canvas>
+        <strong>Figure 7</strong>
+      </div>
     </div>
   </body>
 </html>

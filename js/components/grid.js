@@ -37,6 +37,7 @@ class Grid {
   }
 
   drawSolution (root, target, ctx) {
+    debugger
     const path = [target];
     while(path[0].x !== root.x || path[0].y !== root.y) {
       let node = path[0].parent;
@@ -45,11 +46,11 @@ class Grid {
 
     const drawStep = () => {
       path.forEach(node => {
-        this.drawPath(ctx, node, '#ff2103')
+        this.drawPath(ctx, node, '#ff2103');
       });
     }
 
-    const timer = setInterval(drawStep, 0);
+    drawStep();
   }
 
   drawPath(ctx, node, color) {
