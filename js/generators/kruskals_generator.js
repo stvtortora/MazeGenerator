@@ -1,4 +1,4 @@
-import maze_solver from '../solvers/maze_solver';
+import maze_solver from '../solvers/maze_solver2';
 import DisjointSet from '../components/disjoint_set';
 
 const kruskals_generator = (grid, root, ctx, algo) => {
@@ -33,14 +33,13 @@ const kruskals_generator = (grid, root, ctx, algo) => {
   }
 
   let options = rejectWalls(flatten(grid.matrix));
-debugger
 
   const generationStep = () => {
     if(options.length === 0) {
 
       // checkSets();
       window.clearInterval(timer);
-      // maze_solver(ctx, root, grid.matrix[48][48], grid, algo);
+      // maze_solver(ctx, grid.matrix[0][0], grid.matrix[48][48], grid, algo);
       return;
     };
 
@@ -55,9 +54,10 @@ debugger
         const neighbor = grid.matrix[coords[0]][coords[1]];
 
         if(!disjointSet.joined(selected, neighbor)){
-          debugger
+
           disjointSet.merge(selected, neighbor);
           neighbor.parent = selected;
+          // selected.children.push(neighbor);
 
           neighbor.parent_connector = grid.matrix[(neighbor.x + selected.x) / 2][(neighbor.y + selected.y) / 2];
           grid.continuePath(selected, ctx);
@@ -67,7 +67,7 @@ debugger
       }
 
     } else{
-      options.splice(randomIndex, 0);
+      options.splice(randomIndex, 1);
     }
 
   }

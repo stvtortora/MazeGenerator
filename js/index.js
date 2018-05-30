@@ -7,9 +7,9 @@ import kruskals_generator from './generators/kruskals_generator';
 
 document.addEventListener("DOMContentLoaded", () => {
     maze(primsDfsGenerator, '1', [0, 0], [50, 50], null, 'dfs');
-    maze(randomized_dfs_generator, '2', [0, 0], [50, 50], null);
-    maze(primsDfsGenerator, '3', [0, 0], [50, 50], null, 'prims');
-    maze(kruskals_generator, '4', [0, 0], [50, 50], null, null);
+    maze(randomized_dfs_generator, '2', [24, 24], [50, 50], null);
+    maze(primsDfsGenerator, '3', [24, 24], [50, 50], null, 'prims');
+    maze(kruskals_generator, '4', [0, 0], [50, 50], 'dfs', 'dfs');
     maze(primsDfsGenerator, '5', [0, 0], [50, 50], 'dfs', 'prims');
     maze(primsDfsGenerator, '6', [0, 0], [50, 50], 'bfs', 'prims');
     maze(primsDfsGenerator, '7', [0, 0], [50, 50], 'a*', 'prims');

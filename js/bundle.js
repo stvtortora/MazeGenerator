@@ -83,14 +83,11 @@ __webpack_require__.r(__webpack_exports__);
 class DisjointSet {
 
   joined(node1, node2) {
-    debugger
     return node1.setRoot() === node2.setRoot();
   }
 
   merge(set1, set2) {
-    debugger
     set2.setRoot().setParent = set1.setRoot();
-    debugger
   }
 }
 
@@ -144,11 +141,13 @@ class Grid {
   continuePath(node, ctx) {
     this.matrix[node.x][node.y] = node;
     node.onPath = true;
+    if(node.parent_connector) {
+      node.parent_connector.onPath = true;
+    }
     this.drawPath(ctx, node, "#2ae950");
   }
 
   drawSolution (root, target, ctx) {
-    debugger
     const path = [target];
     while(path[0].x !== root.x || path[0].y !== root.y) {
       let node = path[0].parent;
@@ -193,17 +192,21 @@ class MinHeap {
     this.comparator = comparator;
     this.array = [root];
     this.length = 1;
+    this.removed = null;
   }
 
   shift() {
+    this.swap(0, this.length - 1);
+    this.removed = this.array.pop();
     this.length--;
-    return this.array.shift();
+    this.heapifyDown();
+    return this.removed;
   }
 
   push(node) {
     this.array.push(node);
     this.length++;
-    this.heapify();
+    this.heapifyUp();
   }
 
   swap(x, y) {
@@ -212,7 +215,7 @@ class MinHeap {
     this.array[y] = temp;
   }
 
-  heapify() {
+  heapifyUp() {
     let index = this.length - 1;
     let parentIndex = Math.floor((index - 1) / 2);
 
@@ -223,6 +226,33 @@ class MinHeap {
     }
   }
 
+  heapifyDown() {
+    let index = 0;
+    let child1Index = 1;
+    let child2Index = 2;
+    let priorityChildIndex = this.priorityChildIndex(child1Index, child2Index);
+
+    while(priorityChildIndex && this.comparator(this.array[index], this.array[priorityChildIndex])) {
+      this.swap(index, priorityChildIndex);
+
+      index = priorityChildIndex;
+      child1Index = (priorityChildIndex * 2) + 1;
+      child2Index = (priorityChildIndex * 2) + 2;
+      priorityChildIndex = this.priorityChildIndex(child1Index, child2Index);
+    }
+  }
+
+  priorityChildIndex(index1, index2) {
+    if(index1 < this.length) {
+
+      if(index2 >= this.length) {
+        return index1;
+      }
+
+      return this.array[index1].fVal < this.array[index2].fVal ? index1 : index2;
+    }
+    return null;
+  }
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (MinHeap);
@@ -301,7 +331,7 @@ class Node {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _solvers_maze_solver__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../solvers/maze_solver */ "./js/solvers/maze_solver.js");
+/* harmony import */ var _solvers_maze_solver2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../solvers/maze_solver2 */ "./js/solvers/maze_solver2.js");
 /* harmony import */ var _components_disjoint_set__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/disjoint_set */ "./js/components/disjoint_set.js");
 
 
@@ -338,14 +368,13 @@ const kruskals_generator = (grid, root, ctx, algo) => {
   }
 
   let options = rejectWalls(flatten(grid.matrix));
-debugger
 
   const generationStep = () => {
     if(options.length === 0) {
 
       // checkSets();
       window.clearInterval(timer);
-      // maze_solver(ctx, root, grid.matrix[48][48], grid, algo);
+      // maze_solver(ctx, grid.matrix[0][0], grid.matrix[48][48], grid, algo);
       return;
     };
 
@@ -360,9 +389,10 @@ debugger
         const neighbor = grid.matrix[coords[0]][coords[1]];
 
         if(!disjointSet.joined(selected, neighbor)){
-          debugger
+
           disjointSet.merge(selected, neighbor);
           neighbor.parent = selected;
+          // selected.children.push(neighbor);
 
           neighbor.parent_connector = grid.matrix[(neighbor.x + selected.x) / 2][(neighbor.y + selected.y) / 2];
           grid.continuePath(selected, ctx);
@@ -372,7 +402,7 @@ debugger
       }
 
     } else{
-      options.splice(randomIndex, 0);
+      options.splice(randomIndex, 1);
     }
 
   }
@@ -407,10 +437,9 @@ const maze = (maze_generator, canvasId, rootCoords, gridDimensions, solve_algo, 
   canvas.addEventListener("click", ()=> {
     const grid = new _components_grid__WEBPACK_IMPORTED_MODULE_0__["default"](gridDimensions);
     const root = new _components_node__WEBPACK_IMPORTED_MODULE_1__["default"](rootCoords, null);
+    // const root = grid.matrix[0][0];
     const ctx = canvas.getContext('2d');
-    debugger
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    debugger
     maze_generator(grid, root, ctx, solve_algo, gen_algo);
   });
 }
@@ -465,7 +494,7 @@ const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
       generationStep();
     }
     debugger
-    Object(_solvers_maze_solver__WEBPACK_IMPORTED_MODULE_0__["default"])(ctx, root, grid.matrix[48][48], grid, solve_algo);
+    Object(_solvers_maze_solver__WEBPACK_IMPORTED_MODULE_0__["default"])(ctx, grid.matrix[0][0], grid.matrix[48][48], grid, solve_algo);
   } else{
     const timer = window.setInterval(generationStep, 0);
   }
@@ -561,9 +590,9 @@ __webpack_require__.r(__webpack_exports__);
 
 document.addEventListener("DOMContentLoaded", () => {
     Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], '1', [0, 0], [50, 50], null, 'dfs');
-    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_randomized_dfs_generator__WEBPACK_IMPORTED_MODULE_2__["default"], '2', [0, 0], [50, 50], null);
-    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], '3', [0, 0], [50, 50], null, 'prims');
-    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_kruskals_generator__WEBPACK_IMPORTED_MODULE_3__["default"], '4', [0, 0], [50, 50], null, null);
+    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_randomized_dfs_generator__WEBPACK_IMPORTED_MODULE_2__["default"], '2', [24, 24], [50, 50], null);
+    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], '3', [24, 24], [50, 50], null, 'prims');
+    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_kruskals_generator__WEBPACK_IMPORTED_MODULE_3__["default"], '4', [0, 0], [50, 50], 'dfs', 'dfs');
     Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], '5', [0, 0], [50, 50], 'dfs', 'prims');
     Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], '6', [0, 0], [50, 50], 'bfs', 'prims');
     Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], '7', [0, 0], [50, 50], 'a*', 'prims');
@@ -593,6 +622,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const maze_solver = (ctx, root, target, grid, algo) => {
+  debugger
   const euclideanDist = (current, target) => {
     return Math.sqrt(
       Math.pow((target.x - current.x), 2) +
@@ -607,6 +637,7 @@ const maze_solver = (ctx, root, target, grid, algo) => {
 
   const solutionStep = () => {
     let selected = algo === 'dfs' ? options.pop() : options.shift();
+debugger
     grid.drawPath(ctx, selected, '#fffbfb');
 
     if(selected.x === target.x && selected.y === target.y) {
@@ -614,7 +645,7 @@ const maze_solver = (ctx, root, target, grid, algo) => {
       grid.drawSolution(root, target, ctx);
       clearInterval(timer);
     }
-
+debugger
     selected.children.forEach(child => {
       if (child.onPath) {
 
@@ -627,6 +658,112 @@ const maze_solver = (ctx, root, target, grid, algo) => {
         options.push(child);
       };
     });
+    debugger
+
+  }
+
+  const timer = setInterval(solutionStep, 0);
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (maze_solver);
+
+
+/***/ }),
+
+/***/ "./js/solvers/maze_solver2.js":
+/*!************************************!*\
+  !*** ./js/solvers/maze_solver2.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_min_heap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/min_heap */ "./js/components/min_heap.js");
+
+
+const maze_solver = (ctx, root, target, grid, algo) => {
+
+  const euclideanDist = (current, target) => {
+    return Math.sqrt(
+      Math.pow((target.x - current.x), 2) +
+      Math.pow((target.y - current.y), 2)
+    )
+  };
+  const comparator = (node1, node2) => {
+    return node1.fVal > node2.fVal;
+  }
+  root.gVal = 0;
+  let options = algo === 'a*' ? new _components_min_heap__WEBPACK_IMPORTED_MODULE_0__["default"](comparator, root) : [root];
+  const visited = {};
+  visited[root] = root;
+
+  const solutionStep = () => {
+    let selected = algo === 'dfs' ? options.pop() : options.shift();
+debugger
+    grid.drawPath(ctx, selected, '#fffbfb');
+
+    if(selected.x === target.x && selected.y === target.y) {
+
+      grid.drawSolution(root, target, ctx);
+      clearInterval(timer);
+    }
+
+    if(selected.adjacentCoords.length === 0) {
+      debugger
+      const neighborCoords = [
+        [selected.x - 2, selected.y],
+        [selected.x + 2, selected.y],
+        [selected.x, selected.y - 2],
+        [selected.x, selected.y + 2]
+      ];
+
+      neighborCoords.forEach(coords => {
+        debugger
+        if(grid.inBounds(coords[0], coords[1])){
+          let neighbor = grid.matrix[coords[0]][coords[1]];
+          let connector = grid.matrix[(selected.x + neighbor.x) / 2][(selected.y + neighbor.y) / 2];
+          debugger
+          if(connector.onPath) {
+            if (algo === 'a*') {
+              const gVal = selected.gVal + 1;
+              const hVal = euclideanDist(neighbor, target);
+              const fVal = gVal + hVal;
+              if(!visited[neighbor] || visited[neighbor].fVal > fVal) {
+                neighbor.gVal = gVal;
+                neighbor.fVal = fVal;
+                visited[neighbor] = neighbor;
+                options.push(neighbor);
+              }
+            } else {
+              debugger
+              const key = JSON.stringify(neighbor);
+              if(!visited[key]) {
+                debugger
+                visited[key] = neighbor;
+                debugger
+                options.push(neighbor);
+              }
+            }
+          }
+        }
+      });
+    }else {
+
+      selected.children.forEach(child => {
+        if (child.onPath) {
+
+          if (algo === 'a*') {
+            child.gVal = child.parent.gVal + 1;
+            child.hVal = euclideanDist(child, target);
+            child.fVal = child.gVal + child.hVal;
+          }
+
+          options.push(child);
+        };
+      });
+
+    }
 
   }
 

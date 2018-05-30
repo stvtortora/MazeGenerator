@@ -33,11 +33,13 @@ class Grid {
   continuePath(node, ctx) {
     this.matrix[node.x][node.y] = node;
     node.onPath = true;
+    if(node.parent_connector) {
+      node.parent_connector.onPath = true;
+    }
     this.drawPath(ctx, node, "#2ae950");
   }
 
   drawSolution (root, target, ctx) {
-    debugger
     const path = [target];
     while(path[0].x !== root.x || path[0].y !== root.y) {
       let node = path[0].parent;

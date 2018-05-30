@@ -22,7 +22,18 @@ const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
 
     if(grid.openAt(selected.x, selected.y)) {
       grid.continuePath(selected, ctx);
-      selected.generateChildren(grid);
+      // selected.generateChildren(grid);
+      selected.children = selected.adjacentCoords.map(coords => {
+        if(grid.inBounds(coords[0], coords[1]) && grid.openAt(coords[0], coords[1])){
+          const child = grid.matrix[coords[0]][coords[1]];
+          child.parent = selected;
+          child.parent_connector = grid.matrix[(child.x + selected.x) / 2][(child.y + selected.y) / 2];
+          return child;
+        }
+      }).filter(child => {
+        return child;
+      });
+
       options = options.concat(selected.children);
     }
   }
@@ -32,7 +43,7 @@ const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
       generationStep();
     }
     debugger
-    maze_solver(ctx, grid.matrix[0][0], grid.matrix[48][48], grid, solve_algo);
+    maze_solver(ctx, root, grid.matrix[48][48], grid, solve_algo);
   } else{
     const timer = window.setInterval(generationStep, 0);
   }

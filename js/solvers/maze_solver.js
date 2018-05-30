@@ -1,6 +1,7 @@
 import MinHeap from '../components/min_heap';
 
 const maze_solver = (ctx, root, target, grid, algo) => {
+  debugger
   const euclideanDist = (current, target) => {
     return Math.sqrt(
       Math.pow((target.x - current.x), 2) +
@@ -15,6 +16,7 @@ const maze_solver = (ctx, root, target, grid, algo) => {
 
   const solutionStep = () => {
     let selected = algo === 'dfs' ? options.pop() : options.shift();
+debugger
     grid.drawPath(ctx, selected, '#fffbfb');
 
     if(selected.x === target.x && selected.y === target.y) {
@@ -22,7 +24,7 @@ const maze_solver = (ctx, root, target, grid, algo) => {
       grid.drawSolution(root, target, ctx);
       clearInterval(timer);
     }
-
+debugger
     selected.children.forEach(child => {
       if (child.onPath) {
 
@@ -35,6 +37,7 @@ const maze_solver = (ctx, root, target, grid, algo) => {
         options.push(child);
       };
     });
+    debugger
 
   }
 
