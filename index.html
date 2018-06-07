@@ -11,21 +11,21 @@
     <div class='intro'>
       <h1>Maze Generator</h1>
       <p>In this demonstration, we will take a look at 5 algorithms for generating and solving mazes. </p>
-      <strong>Click any box to view a maze.</strong>
     </div>
     <h2>Phase 1: Generating Mazes</h2>
     <div class='maze_demonstration'>
         <div class="description">
-          <h3>Depth First Search</h3>
+          <h3>Depth First Traversal</h3>
           <p>Before we get to solving a maze, let's see some examples of how one can be generated.
-            DFS, a common algorithm for traversing and searching trees and graphs, is a good place to start. Here's how it works: <br/>
+            DFT is a good place to start. Here's how it works: <br/>
             <br/>
             1. Initialize a stack with a single node.<br/>
             2. Pop a node from the stack. <br/>
-            3. Push each of the node's unvisited children onto the stack. <br/>
+            3. Push each of the node's unvisited children onto the stack.<br/>
             4. Repeat step two onward until the stack is empty. <br/>
             <br/>
-            As we when we click figure 1, DFS doesn't create much of a maze when implemented strictly.<br/>
+            This version of DFT uses pre-order traversal, meaning that a parent node is visited before any of its children.
+            As we see when we click figure 1, pre-order traversal doesn't create much of a maze when implemented strictly.<br/>
             <br/>
           </p>
         </div>
@@ -40,11 +40,12 @@
         <strong>Figure 2</strong>
       </div>
       <div class="description">
-        By amending steps 2 and 3 of our algorithm, DFS can create a maze. Here are the changes: <br/>
+        By amending steps 2 and 3 of our algorithm, DFT can create a maze. Here are the changes: <br/>
         <br/>
         2. Look at the next node on the stack.<br/>
         3. If the node has unvisited children, push a random one onto the stack. Else, pop the node from the stack.<br/>
         <br/>
+        These two changes turn our algorithm into a post-ordet traversal. That is, a parent node is visited only after each of its children is visited.
         Now if we click on figure 2, we get a much more convincing maze.<br/>
       </div>
       <br/>
@@ -57,7 +58,7 @@
             The next algorithm we'll check out is Prim's. Here's a high-level overview of how it works: <br/>
             <br/>
             1. Choose a node as the root, and store it in a set.<br/>
-            2. Select the node in the set that would result in the least cost to travel to.<br/>
+            2. Select the node in the set that would result in the least cost* to travel to.<br/>
             3. Add the node to the maze unless it will cause a loop.<br/>
             4. Add the node's children to the set.<br/>
             4. Remove the node from the set.<br/>
@@ -110,9 +111,9 @@
     <h2>Phase 2: Solving Mazes</h2>
     <div class="maze_demonstration">
       <div class="description">
-        <h3>Depth First Search (Again)</h3>
+        <h3>Depth First Search</h3>
 
-          <p>We're going to use DFS to solve a maze this time. When it comes to searching rather than constructing a maze with this algorithm, there's one crucial difference to attend to. Here's our new step 4:<br/>
+          <p>We're going to use DFS to solve a maze this time. When it comes to searching rather than constructing a maze with this algorithm, there's one crucial difference to attend to. We can change step 4 of our DFT post-order algorithm to the following:<br/>
             <br/>
 
           4. Repeat step two onward until the target is found. <br/>
@@ -149,7 +150,7 @@
             <br/>
 
             1. Initialize a set with a single node.<br/>
-            2. Choose the node from the set with the least f-value, and remove it from the set.<br/>
+            2. Choose the node from the set with the least f-value*, and remove it from the set.<br/>
             3. For each of the node's children:<br/>
             3a. Calculate the f value of each of the node's children.<br/>
             3b. If there is a visited node with the same coordinates and a lower f-value as this child, discard the child. Else, add it to the set.<br/>
@@ -157,7 +158,7 @@
             <br/>
 
 
-            A node's f-value is calculated by adding it's g-value to it's h-value. A node's g-value is simply how many steps away it is from the root, and it's h-value is it's euclidean distance from the target.
+            * A node's f-value is calculated by adding it's g-value to it's h-value. A node's g-value is simply how many steps away it is from the root, and it's h-value is it's euclidean distance from the target.
             A* is a 'smart' algorithm, in that it uses the a node's f-value as a heuristic 'guess' how likely it is to be closest to the target. It selects the node with the least f in attempt to reach the target faster.
             <br/>
         </p>
