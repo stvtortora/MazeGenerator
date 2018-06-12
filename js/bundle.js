@@ -341,7 +341,7 @@ class Node {
     }).filter(child => {
       return grid.inBounds(child.x, child.y);
     });
-  } 
+  }
 
   setRoot() {
     return this.setParent ? this.setParent.setRoot() : this;
@@ -525,7 +525,6 @@ const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
     while(options.length > 0){
       generationStep();
     }
-    debugger
     Object(_solvers_maze_solver__WEBPACK_IMPORTED_MODULE_0__["default"])(ctx, grid.matrix[0][0], grid.matrix[48][48], grid, solve_algo);
   } else{
     const timer = window.setInterval(generationStep, 0);

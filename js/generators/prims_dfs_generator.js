@@ -7,7 +7,6 @@ const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
   const generationStep = () => {
     if(options.length === 0) {
       window.clearInterval(timer);
-      // maze_solver(ctx, root, grid.matrix[48][48], grid, algo);
       return;
     };
 
@@ -31,7 +30,6 @@ const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
     while(options.length > 0){
       generationStep();
     }
-    debugger
     maze_solver(ctx, grid.matrix[0][0], grid.matrix[48][48], grid, solve_algo);
   } else{
     const timer = window.setInterval(generationStep, 0);

@@ -28,7 +28,7 @@ const randomized_dfs_generator = (grid, root, ctx, algo) => {
       let coords = childCoords[checked];
 
       if(grid.inBounds(coords[0], coords[1]) && grid.openAt(coords[0], coords[1])){
-        debugger
+
         parent.generateChild(coords);
         let child = parent.children[parent.children.length - 1];
         grid.continuePath(child, ctx);
