@@ -66,7 +66,7 @@
             <br/>
 
             Notice that step two requires we select the node that would result it the least cost to travel to. In our case, least cost translates to least distance.
-            However, since each vertex in our maze spans exactly the same distance, this step is irrelevant to us. We can modfiy Prim's algorithm slightly to account for this. Here's our new step 2: <br/>
+            However, since each edge in our maze spans exactly the same distance, this step is irrelevant to us. We can modfiy Prim's algorithm slightly to account for this. Here's our new step 2: <br/>
             <br/>
 
             2. Select a random node from the set. <br/>
@@ -93,7 +93,7 @@
         <p>
           The last maze generation algorithm we'll discuss is Kruskal's. Here's an overview:<br/>
           <br/>
-          1. Randomly iterate through all vertices (walls) of the maze. <br/>
+          1. Randomly iterate through all walls of the maze. <br/>
           2. If the two nodes separated by the wall belong to different sets, remove the wall between them. This joins the two into the same set. <br/>
           <br/>
           <br/>
