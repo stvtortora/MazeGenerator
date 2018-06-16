@@ -215,38 +215,6 @@ class MinHeap {
     this.array[y] = temp;
   }
 
-  // heapify(direction) {
-  //   let fromIndex;
-  //   let toIndex;
-  //   let condition;
-  //
-  //   if(direction === 'up') {
-  //     fromIndex = this.length - 1;
-  //     toIndex =  Math.floor((fromIndex - 1) / 2);
-  //     condition = toIndex > -1 && this.comparator(this.array[fromIndex], this.array[toIndex]);
-  //   } else {
-  //     fromIndex = 0;
-  //     let child1Index = 1;
-  //     let child2Index = 2;
-  //     let toIndex = this.priorityChildIndex(child1Index, child2Index);
-  //     condition = toIndex && this.comparator(this.array[fromIndex], this.array[toIndex]);
-  //   }
-  //
-  //   while(condition) {
-  //     this.swap(toIndex, fromIndex);
-  //
-  //     fromIndex = toIndex;
-  //     if(direction === 'up') {
-  //       toIndex = Math.floor((fromIndex - 1) / 2);
-  //     } else {
-  //       child1Index = (toIndex * 2) + 1;
-  //       child2Index = (toIndex * 2) + 2;
-  //       toIndex = this.priorityChildIndex(child1Index, child2Index);
-  //     }
-  //   }
-  //
-  // }
-
   heapifyUp() {
     let index = this.length - 1;
     let parentIndex = Math.floor((index - 1) / 2);
