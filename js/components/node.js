@@ -28,17 +28,12 @@ class Node {
   }
 
   generateChildren(grid) {
-    this.children = this.adjacentCoords.map(coords => {
-      const child = new Node(coords, null);
-      child.parent = this;
-      const parent_connector = new Node ([(child.x + child.parent.x) / 2, (child.y + child.parent.y) / 2], null);
-      child.parent_connector = parent_connector;
-
-      return child;
-    }).filter(child => {
-      return grid.inBounds(child.x, child.y);
+    this.adjacentCoords.forEach(coords => {
+      if(grid.inBounds(coords[0], coords[1])){
+        this.generateChild(coords);
+      }
     });
-  } 
+  }
 
   setRoot() {
     return this.setParent ? this.setParent.setRoot() : this;

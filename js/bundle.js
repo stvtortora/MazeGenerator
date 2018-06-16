@@ -331,15 +331,10 @@ class Node {
   }
 
   generateChildren(grid) {
-    this.children = this.adjacentCoords.map(coords => {
-      const child = new Node(coords, null);
-      child.parent = this;
-      const parent_connector = new Node ([(child.x + child.parent.x) / 2, (child.y + child.parent.y) / 2], null);
-      child.parent_connector = parent_connector;
-
-      return child;
-    }).filter(child => {
-      return grid.inBounds(child.x, child.y);
+    this.adjacentCoords.forEach(coords => {
+      if(grid.inBounds(coords[0], coords[1])){
+        this.generateChild(coords);
+      }
     });
   }
 
@@ -363,13 +358,11 @@ class Node {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _solvers_maze_solver2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../solvers/maze_solver2 */ "./js/solvers/maze_solver2.js");
-/* harmony import */ var _components_disjoint_set__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/disjoint_set */ "./js/components/disjoint_set.js");
-
+/* harmony import */ var _components_disjoint_set__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/disjoint_set */ "./js/components/disjoint_set.js");
 
 
 const kruskals_generator = (grid, root, ctx, algo) => {
-  const disjointSet = new _components_disjoint_set__WEBPACK_IMPORTED_MODULE_1__["default"];
+  const disjointSet = new _components_disjoint_set__WEBPACK_IMPORTED_MODULE_0__["default"];
   const flatten = (array) => {
     let flattened = [];
 
@@ -403,10 +396,7 @@ const kruskals_generator = (grid, root, ctx, algo) => {
 
   const generationStep = () => {
     if(options.length === 0) {
-
-      // checkSets();
       window.clearInterval(timer);
-      // maze_solver(ctx, grid.matrix[0][0], grid.matrix[48][48], grid, algo);
       return;
     };
 
@@ -469,7 +459,6 @@ const maze = (maze_generator, canvasId, rootCoords, gridDimensions, solve_algo, 
   canvas.addEventListener("click", ()=> {
     const grid = new _components_grid__WEBPACK_IMPORTED_MODULE_0__["default"](gridDimensions);
     const root = new _components_node__WEBPACK_IMPORTED_MODULE_1__["default"](rootCoords, null);
-    // const root = grid.matrix[0][0];
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     maze_generator(grid, root, ctx, solve_algo, gen_algo);
@@ -501,7 +490,6 @@ const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
   const generationStep = () => {
     if(options.length === 0) {
       window.clearInterval(timer);
-      // maze_solver(ctx, root, grid.matrix[48][48], grid, algo);
       return;
     };
 
@@ -513,7 +501,6 @@ const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
       selected = options.pop();
     }
 
-
     if(grid.openAt(selected.x, selected.y)) {
       grid.continuePath(selected, ctx);
       selected.generateChildren(grid);
@@ -521,13 +508,14 @@ const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
     }
   }
 
+  let timer;
   if(solve_algo){
     while(options.length > 0){
       generationStep();
     }
     Object(_solvers_maze_solver__WEBPACK_IMPORTED_MODULE_0__["default"])(ctx, grid.matrix[0][0], grid.matrix[48][48], grid, solve_algo);
-  } else{
-    const timer = window.setInterval(generationStep, 0);
+  } else {
+      timer = setInterval(generationStep, 0);
   }
 
 }
@@ -563,7 +551,6 @@ const randomized_dfs_generator = (grid, root, ctx, algo) => {
   const generationStep = () => {
     if(options.length === 0) {
       window.clearInterval(timer);
-      // maze_solver(ctx, root, grid.matrix[48][48], grid, algo);
       return;
     };
 
@@ -576,7 +563,7 @@ const randomized_dfs_generator = (grid, root, ctx, algo) => {
       let coords = childCoords[checked];
 
       if(grid.inBounds(coords[0], coords[1]) && grid.openAt(coords[0], coords[1])){
-        debugger
+
         parent.generateChild(coords);
         let child = parent.children[parent.children.length - 1];
         grid.continuePath(child, ctx);
@@ -653,7 +640,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const maze_solver = (ctx, root, target, grid, algo) => {
-  debugger
   const euclideanDist = (current, target) => {
     return Math.sqrt(
       Math.pow((target.x - current.x), 2) +
@@ -668,7 +654,6 @@ const maze_solver = (ctx, root, target, grid, algo) => {
 
   const solutionStep = () => {
     let selected = algo === 'dfs' ? options.pop() : options.shift();
-debugger
     grid.drawPath(ctx, selected, '#fffbfb');
 
     if(selected.x === target.x && selected.y === target.y) {
@@ -676,7 +661,7 @@ debugger
       grid.drawSolution(root, target, ctx);
       clearInterval(timer);
     }
-debugger
+
     selected.children.forEach(child => {
       if (child.onPath) {
 
@@ -689,113 +674,6 @@ debugger
         options.push(child);
       };
     });
-    debugger
-
-  }
-
-  const timer = setInterval(solutionStep, 0);
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (maze_solver);
-
-
-/***/ }),
-
-/***/ "./js/solvers/maze_solver2.js":
-/*!************************************!*\
-  !*** ./js/solvers/maze_solver2.js ***!
-  \************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_min_heap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/min_heap */ "./js/components/min_heap.js");
-
-
-const maze_solver = (ctx, root, target, grid, algo) => {
-
-  const euclideanDist = (current, target) => {
-    return Math.sqrt(
-      Math.pow((target.x - current.x), 2) +
-      Math.pow((target.y - current.y), 2)
-    )
-  };
-  const comparator = (node1, node2) => {
-    return node1.fVal > node2.fVal;
-  }
-  root.gVal = 0;
-  let options = algo === 'a*' ? new _components_min_heap__WEBPACK_IMPORTED_MODULE_0__["default"](comparator, root) : [root];
-  const visited = {};
-  visited[root] = root;
-
-  const solutionStep = () => {
-    let selected = algo === 'dfs' ? options.pop() : options.shift();
-debugger
-    grid.drawPath(ctx, selected, '#fffbfb');
-
-    if(selected.x === target.x && selected.y === target.y) {
-
-      grid.drawSolution(root, target, ctx);
-      clearInterval(timer);
-    }
-
-    if(selected.adjacentCoords.length === 0) {
-      debugger
-      const neighborCoords = [
-        [selected.x - 2, selected.y],
-        [selected.x + 2, selected.y],
-        [selected.x, selected.y - 2],
-        [selected.x, selected.y + 2]
-      ];
-
-      neighborCoords.forEach(coords => {
-        debugger
-        if(grid.inBounds(coords[0], coords[1])){
-          let neighbor = grid.matrix[coords[0]][coords[1]];
-          let connector = grid.matrix[(selected.x + neighbor.x) / 2][(selected.y + neighbor.y) / 2];
-          debugger
-          if(connector.onPath) {
-            if (algo === 'a*') {
-              const gVal = selected.gVal + 1;
-              const hVal = euclideanDist(neighbor, target);
-              const fVal = gVal + hVal;
-              if(!visited[neighbor] || visited[neighbor].fVal > fVal) {
-                neighbor.gVal = gVal;
-                neighbor.fVal = fVal;
-                visited[neighbor] = neighbor;
-                options.push(neighbor);
-              }
-            } else {
-              debugger
-              const key = JSON.stringify(neighbor);
-              if(!visited[key]) {
-                debugger
-                visited[key] = neighbor;
-                debugger
-                options.push(neighbor);
-              }
-            }
-          }
-        }
-      });
-    }else {
-
-      selected.children.forEach(child => {
-        if (child.onPath) {
-
-          if (algo === 'a*') {
-            child.gVal = child.parent.gVal + 1;
-            child.hVal = euclideanDist(child, target);
-            child.fVal = child.gVal + child.hVal;
-          }
-
-          options.push(child);
-        };
-      });
-
-    }
-
   }
 
   const timer = setInterval(solutionStep, 0);

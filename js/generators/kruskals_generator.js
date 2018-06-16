@@ -1,4 +1,3 @@
-import maze_solver from '../solvers/maze_solver2';
 import DisjointSet from '../components/disjoint_set';
 
 const kruskals_generator = (grid, root, ctx, algo) => {
@@ -36,10 +35,7 @@ const kruskals_generator = (grid, root, ctx, algo) => {
 
   const generationStep = () => {
     if(options.length === 0) {
-
-      // checkSets();
       window.clearInterval(timer);
-      // maze_solver(ctx, grid.matrix[0][0], grid.matrix[48][48], grid, algo);
       return;
     };
 

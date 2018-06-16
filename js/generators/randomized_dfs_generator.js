@@ -15,7 +15,6 @@ const randomized_dfs_generator = (grid, root, ctx, algo) => {
   const generationStep = () => {
     if(options.length === 0) {
       window.clearInterval(timer);
-      // maze_solver(ctx, root, grid.matrix[48][48], grid, algo);
       return;
     };
 
