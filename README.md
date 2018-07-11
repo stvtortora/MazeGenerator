@@ -6,6 +6,7 @@ This maze generator features five algorithms. It constructs random mazes using D
 
 Several of the algorithms shared considerable logic. In an effort to keep my code DRY, I used generalized functions to construct and solve mazes whenever possible. Heres the master maze generator:
 
+```javascript
 import Grid from '../components/grid';
 import Node from '../components/node';
 
@@ -23,3 +24,4 @@ const maze = (maze_generator, canvasId, rootCoords, gridDimensions, solve_algo, 
 
 
 export default maze;
+```
