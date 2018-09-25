@@ -421,16 +421,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const maze = (maze_generator, canvasId, rootCoords, gridDimensions, solve_algo, gen_algo) => {
-  const canvas = document.getElementById(canvasId);
+//second argument was canvasId, now its the context
+const maze = (maze_generator, ctx, width, height, rootCoords, gridDimensions, solve_algo, gen_algo) => {
+  // const canvas = document.getElementById(canvasId);
 
-  canvas.addEventListener("click", ()=> {
+  // canvas.addEventListener("click", ()=> {
     const grid = new _components_grid__WEBPACK_IMPORTED_MODULE_0__["default"](gridDimensions);
     const root = new _components_node__WEBPACK_IMPORTED_MODULE_1__["default"](rootCoords, null);
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, width, height);
     maze_generator(grid, root, ctx, solve_algo, gen_algo);
-  });
+  // });
 }
 
 
@@ -567,6 +568,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./generators/prims_dfs_generator */ "./js/generators/prims_dfs_generator.js");
 /* harmony import */ var _generators_randomized_dfs_generator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./generators/randomized_dfs_generator */ "./js/generators/randomized_dfs_generator.js");
 /* harmony import */ var _generators_kruskals_generator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./generators/kruskals_generator */ "./js/generators/kruskals_generator.js");
+/* harmony import */ var _mazeHandlers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./mazeHandlers */ "./js/mazeHandlers.js");
+
 
 
 
@@ -575,22 +578,57 @@ __webpack_require__.r(__webpack_exports__);
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], '1', [0, 0], [50, 50], null, 'dfs');
-    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_randomized_dfs_generator__WEBPACK_IMPORTED_MODULE_2__["default"], '2', [24, 24], [50, 50], null);
-    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], '3', [24, 24], [50, 50], null, 'prims');
-    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_kruskals_generator__WEBPACK_IMPORTED_MODULE_3__["default"], '4', [0, 0], [50, 50], 'dfs', 'dfs');
-    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], '5', [0, 0], [50, 50], 'dfs', 'prims');
-    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], '6', [0, 0], [50, 50], 'bfs', 'prims');
-    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], '7', [0, 0], [50, 50], 'a*', 'prims');
+    const canvas = document.getElementById('1');
 
-    const mazeIds = ['1', '2', '3', '4', '5', '6', '7'].forEach(id => {
-      const canvas = document.getElementById(id);
-      const ctx = canvas.getContext('2d');
-      ctx.font = '30px sans-serif'
-      ctx.fillStyle = 'white';
-      ctx.fillText("Click to View Maze", 100, canvas.height/2);
-    });
+    Object(_mazeHandlers__WEBPACK_IMPORTED_MODULE_4__["default"])(canvas);
 });
+
+
+
+// maze(primsDfsGenerator, '1', [0, 0], [50, 50], null, 'dfs');
+// maze(randomized_dfs_generator, '2', [24, 24], [50, 50], null);
+// maze(primsDfsGenerator, '3', [24, 24], [50, 50], null, 'prims');
+// maze(kruskals_generator, '4', [0, 0], [50, 50], 'dfs', 'dfs');
+// maze(primsDfsGenerator, '5', [0, 0], [50, 50], 'dfs', 'prims');
+// maze(primsDfsGenerator, '6', [0, 0], [50, 50], 'bfs', 'prims');
+// maze(primsDfsGenerator, '7', [0, 0], [50, 50], 'a*', 'prims');
+
+// const mazeIds = ['1', '2', '3', '4', '5', '6', '7'].forEach(id => {
+//   const canvas = document.getElementById(id);
+//   const ctx = canvas.getContext('2d');
+//   ctx.font = '30px sans-serif'
+//   ctx.fillStyle = 'white';
+//   ctx.fillText("Click to View Maze", 100, canvas.height/2);
+// });
+
+
+/***/ }),
+
+/***/ "./js/mazeHandlers.js":
+/*!****************************!*\
+  !*** ./js/mazeHandlers.js ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _generators_master_generator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./generators/master_generator */ "./js/generators/master_generator.js");
+/* harmony import */ var _generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./generators/prims_dfs_generator */ "./js/generators/prims_dfs_generator.js");
+
+
+
+const mazeHandlers = (canvas) => {
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width;
+  const height = canvas.height;
+
+  document.getElementById('1').addEventListener("click", () => {
+    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], ctx, width, height, [24, 24], [50, 50], null, 'prims');
+  })
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (mazeHandlers);
 
 
 /***/ }),
