@@ -8,23 +8,36 @@
     <link href="https://fonts.googleapis.com/css?family=Lato|Roboto" rel="stylesheet">
   </head>
   <body>
-    <section>
-      <span>
-        <button id='prims_generator'>Prims</button>
-        <button id='randomized_dfs_generator'>Randomized DFS</button>
-        <button id='strict_dfs_generator'>Strict DFS</button>
-        <button id='quick_maze'>Quick Maze</button>
-      </span>
-      <span>
-        <button class='solver' id='dfs_solver'>DFS</button>
-        <button class='solver' id='bfs_solver'>BFS</button>
-        <button class='solver' id='a*_solver'>A*</button>
-      </span>
-    </section>
-    <canvas class="canvas" id="1" width="490" height="490">Figure 1</canvas><br/>
-    <section>
-      <div id='description'></div>
-    </section>
+    <h1>Maze Machine</h1>
+    <content>
+      <section class='buttons'>
+        <div>
+          <h2>Generators</h2>
+          <div class='button-list'>
+            <button id='prims_generator'>Prims</button>
+            <button id='randomized_dfs_generator'>Randomized DFS</button>
+            <button id='strict_dfs_generator'>Strict DFS</button>
+            <button id='quick_maze'>Quick Maze</button>
+          </div>
+        </div>
+        <div>
+          <h2>Solvers</h2>
+          <div class='button-list'>
+            <button class='solver' id='dfs_solver'>DFS</button>
+            <button class='solver' id='bfs_solver'>BFS</button>
+            <button class='solver' id='a*_solver'>A*</button>
+          </div>
+        </div>
+      </section>
+      <section>
+        <canvas class="canvas" id="1" width="490" height="490">Figure 1</canvas><br/>
+      </section>
+      <section>
+        <div class='description-container'>
+          <div id='description'></div>
+        </div>
+      </section>
+    </content>
   </body>
 </html>
 <!-- <body>
