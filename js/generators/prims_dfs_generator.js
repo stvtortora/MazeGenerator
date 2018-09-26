@@ -31,8 +31,9 @@ const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
   if(solve_algo){
     while(options.length > 0){
       generationStep();
+      changeButtonStatus(false);
     }
-    maze_solver(ctx, grid.matrix[0][0], grid.matrix[48][48], grid, solve_algo);
+    // maze_solver(ctx, grid.matrix[0][0], grid.matrix[48][48], grid, solve_algo);
   } else {
       timer = setInterval(generationStep, 0);
   }
