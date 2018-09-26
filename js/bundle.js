@@ -80,11 +80,15 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-const changeButtonStatus = (status) => {
+const changeButtonStatus = (status, onlySolvers = false) => {
   const buttons = document.getElementsByTagName('button');
 
   for (let i = 0; i < buttons.length; i++) {
-    buttons[i].disabled = status;
+    const button = buttons[i];
+    
+    if (!onlySolvers || button.getAttribute('class') === 'solver') {
+      button.disabled = status;
+    }
   }
 }
 
@@ -670,6 +674,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const mazeHandlers = (canvas) => {
+  Object(_button_util__WEBPACK_IMPORTED_MODULE_3__["default"])(true, true);
+  
   const ctx = canvas.getContext('2d');
   const width = canvas.width;
   const height = canvas.height;
