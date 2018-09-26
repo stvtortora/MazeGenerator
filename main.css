@@ -28,7 +28,8 @@ body {
   background: radial-gradient(#3268e2, #000868);
 }
 
-h1, h2 {
+h1 {
+  font-size: 50px;
 }
 
 content {
@@ -48,7 +49,9 @@ h2 {
   padding: 20px;
 }
 
-
+.algo-title {
+  margin-top: 0;
+}
 
 .buttons > div {
   width: 300px;
@@ -92,8 +95,7 @@ button:hover {
   flex-direction: column;
   align-items: center;
   margin: 10px;
-  width: 50%;
-  color: '#fffbfb';
+  font-size: 20px;
 }
 
 .maze_demonstration {
@@ -105,10 +107,12 @@ button:hover {
 
 .description-container {
   background: black;
+  border: 2px solid black;
   width: 380px;
   height: 470px;
   padding: 20px;
   margin: 10px;
+  font-size: 20px
 }
 
 .buttons {
