@@ -8,166 +8,181 @@
     <link href="https://fonts.googleapis.com/css?family=Lato|Roboto" rel="stylesheet">
   </head>
   <body>
-    <div class='intro'>
-      <h1>Maze Generator</h1>
-      <p>In this demonstration, we will take a look at 5 algorithms for generating and solving mazes. </p>
-    </div>
-    <h2>Phase 1: Generating Mazes</h2>
-    <div class='maze_demonstration'>
-        <div class="description">
-          <h3>Depth First Traversal</h3>
-          <p>Before we get to solving a maze, let's see some examples of how one can be generated.
-            DFT is a good place to start. Here's how it works: <br/>
-            <br/>
-            1. Initialize a stack with a single node.<br/>
-            2. Pop a node from the stack. <br/>
-            3. Push each of the node's unvisited children onto the stack.<br/>
-            4. Repeat step two onward until the stack is empty. <br/>
-            <br/>
-            This version of DFT uses pre-order traversal, meaning that a parent node is visited before any of its children.
-            As we see when we click figure 1, pre-order traversal doesn't create much of a maze when implemented strictly.<br/>
-            <br/>
-          </p>
-        </div>
-        <div class='canvas-container'>
-          <canvas class="canvas" id="1" width="490" height="490">Figure 1</canvas><br/>
-          <strong>Figure 1</strong>
-        </div>
-    </div>
-    <div class='maze_demonstration'>
-      <div class='canvas-container'>
-        <canvas class="canvas" id="2" width="490" height="490">Figure 2</canvas>
-        <strong>Figure 2</strong>
-      </div>
-      <div class="description">
-        By amending steps 2 and 3 of our algorithm, DFT can create a maze. Here are the changes: <br/>
-        <br/>
-        2. Look at the next node on the stack.<br/>
-        3. If the node has unvisited children, push a random one onto the stack. Else, pop the node from the stack.<br/>
-        <br/>
-        These two changes turn our algorithm into a post-ordet traversal. That is, a parent node is visited only after each of its children is visited.
-        Now if we click on figure 2, we get a much more convincing maze.<br/>
-      </div>
-      <br/>
-    </div>
-    <div class='maze_demonstration'>
-      <div class="description">
-        <h3>Prim's Algorithm</h3>
-
-          <p>
-            The next algorithm we'll check out is Prim's. Here's a high-level overview of how it works: <br/>
-            <br/>
-            1. Choose a node as the root, and store it in a set.<br/>
-            2. Select the node in the set that would result in the least cost* to travel to.<br/>
-            3. Add the node to the maze unless it will cause a loop.<br/>
-            4. Add the node's children to the set.<br/>
-            4. Remove the node from the set.<br/>
-            5. Repeat steps 2-4 until the set is empty.<br/>
-            <br/>
-
-            Notice that step two requires we select the node that would result it the least cost to travel to. In our case, least cost translates to least distance.
-            However, since each edge in our maze spans exactly the same distance, this step is irrelevant to us. We can modfiy Prim's algorithm slightly to account for this. Here's our new step 2: <br/>
-            <br/>
-
-            2. Select a random node from the set. <br/>
-            <br/>
-            Thats it! Click on figure 3 to see our randomized Prim's algorithm in action.
-            <br/>
-          </p>
-        <br/>
-      </div>
-      <div class=canvas-container>
-        <canvas class="canvas" id="3" width="490" height="490">Figure 3</canvas>
-        <strong>Figure 3</strong>
-      </div>
-    </div>
-
-    <div class='maze_demonstration'>
-      <div class='canvas-container'>
-        <canvas class="canvas" id="4" width="490" height="490">Figure 3</canvas>
-        <strong>Figure 4</strong>
-      </div>
-      <div class="description">
-        <h3>Kruskal's Algorithm</h3>
-
-        <p>
-          The last maze generation algorithm we'll discuss is Kruskal's. Here's an overview:<br/>
-          <br/>
-          1. Randomly iterate through all walls of the maze. <br/>
-          2. If the two nodes separated by the wall belong to different sets, remove the wall between them. This joins the two into the same set. <br/>
-          <br/>
-          <br/>
-
-            By interating over each wall in the maze, we consider each pair of adjacent path nodes. Since we connect any two path nodes that are not already in the same set, all path nodes will be in the same set by the end of the process.
-            In other words, the maze will be fully integrated; you'll be able to traverse to any path node from any other.<br/>
-          <br/>
-          <br/>
-
-        </p>
-
-        <br/>
-      </div>
-    </div>
-    <h2>Phase 2: Solving Mazes</h2>
-    <div class="maze_demonstration">
-      <div class="description">
-        <h3>Depth First Search</h3>
-
-          <p>We're going to use DFS to solve a maze this time. When it comes to searching rather than constructing a maze with this algorithm, there's one crucial difference to attend to. We can change step 4 of our DFT post-order algorithm to the following:<br/>
-            <br/>
-
-          4. Repeat step two onward until the target is found. <br/>
-          <br/>
-          By terminating the process when our target is reached, we avoid unecessary iterations!
-          <br/>
-          <br/>
-        </p>
-      </div>
-      <div class="canvas-container">
-        <canvas class="canvas" id="5" width="490" height="490">Figure 4</canvas>
-        <strong>Figure 5</strong>
-      </div>
-    </div>
-    <div class="maze_demonstration">
-      <div class='canvas-container'>
-        <canvas class="canvas" id="6" width="490" height="490">Figure 5</canvas>
-        <strong>Figure 6</strong>
-      </div>
-      <div class="description">
-        <h3>Breadth First Search</h3>
-        <p>
-          BFS works similarly to DFS. As the name implies, it distinguishes itself by visiting a root's sibilings first, rather than it's children. We accomplish this by substituting our stack from DFS with a queue.
-        </p><br/>
-        <br/>
-      </div>
-    </div>
-    <div class="maze_demonstration">
-      <div class="description">
-        <h3>A*</h3>
-
-          <p>
-            The last algorithm we'll look at is A*. An extension of Dijkstra's algorithm, A* proceeds with the following steps:<br/>
-            <br/>
-
-            1. Initialize a set with a single node.<br/>
-            2. Choose the node from the set with the least f-value*, and remove it from the set.<br/>
-            3. For each of the node's children:<br/>
-            3a. Calculate the f value of each of the node's children.<br/>
-            3b. If there is a visited node with the same coordinates and a lower f-value as this child, discard the child. Else, add it to the set.<br/>
-            4. Repeat steps 2-3 until the target is reached.<br/>
-            <br/>
-
-
-            * A node's f-value is calculated by adding it's g-value to it's h-value. A node's g-value is simply how many steps away it is from the root, and it's h-value is it's euclidean distance from the target.
-            A* is a 'smart' algorithm, in that it uses the a node's f-value as a heuristic 'guess' how likely it is to be closest to the target. It selects the node with the least f in attempt to reach the target faster.
-            <br/>
-        </p>
-        <br/>
-      </div>
-      <div class="canvas-container">
-        <canvas class="canvas" id="7" width="490" height="490">Figure 6</canvas>
-        <strong>Figure 7</strong>
-      </div>
-    </div>
+    <section>
+      <span>
+        <button id='prims_generator'>Prims</button>
+        <button id='randomized_dfs_generator'>Randomized DFS</button>
+        <button id='strict_dfs_generator'>Strict DFS</button>
+      </span>
+      <canvas class="canvas" id="1" width="490" height="490">Figure 1</canvas><br/>
+      <span>
+        <button id='dfs_solver'>DFS</button>
+        <button id='bfs_solver'>BFS</button>
+        <button id='a*_solver'>A*</button>
+      </span>
+    </section>
   </body>
 </html>
+<!-- <body>
+  <div class='intro'>
+    <h1>Maze Generator</h1>
+    <p>In this demonstration, we will take a look at 5 algorithms for generating and solving mazes. </p>
+  </div>
+  <h2>Phase 1: Generating Mazes</h2>
+  <div class='maze_demonstration'>
+    <div class="description">
+      <h3>Depth First Traversal</h3>
+      <p>Before we get to solving a maze, let's see some examples of how one can be generated.
+        DFT is a good place to start. Here's how it works: <br/>
+        <br/>
+        1. Initialize a stack with a single node.<br/>
+        2. Pop a node from the stack. <br/>
+        3. Push each of the node's unvisited children onto the stack.<br/>
+        4. Repeat step two onward until the stack is empty. <br/>
+        <br/>
+        This version of DFT uses pre-order traversal, meaning that a parent node is visited before any of its children.
+        As we see when we click figure 1, pre-order traversal doesn't create much of a maze when implemented strictly.<br/>
+        <br/>
+      </p>
+    </div>
+    <div class='canvas-container'>
+      <canvas class="canvas" id="1" width="490" height="490">Figure 1</canvas><br/>
+      <strong>Figure 1</strong>
+    </div>
+  </div>
+  <div class='maze_demonstration'>
+    <div class='canvas-container'>
+      <canvas class="canvas" id="2" width="490" height="490">Figure 2</canvas>
+      <strong>Figure 2</strong>
+    </div>
+    <div class="description">
+      By amending steps 2 and 3 of our algorithm, DFT can create a maze. Here are the changes: <br/>
+      <br/>
+      2. Look at the next node on the stack.<br/>
+      3. If the node has unvisited children, push a random one onto the stack. Else, pop the node from the stack.<br/>
+      <br/>
+      These two changes turn our algorithm into a post-ordet traversal. That is, a parent node is visited only after each of its children is visited.
+      Now if we click on figure 2, we get a much more convincing maze.<br/>
+    </div>
+    <br/>
+  </div>
+  <div class='maze_demonstration'>
+    <div class="description">
+      <h3>Prim's Algorithm</h3>
+
+      <p>
+        The next algorithm we'll check out is Prim's. Here's a high-level overview of how it works: <br/>
+        <br/>
+        1. Choose a node as the root, and store it in a set.<br/>
+        2. Select the node in the set that would result in the least cost* to travel to.<br/>
+        3. Add the node to the maze unless it will cause a loop.<br/>
+        4. Add the node's children to the set.<br/>
+        4. Remove the node from the set.<br/>
+        5. Repeat steps 2-4 until the set is empty.<br/>
+        <br/>
+
+        Notice that step two requires we select the node that would result it the least cost to travel to. In our case, least cost translates to least distance.
+        However, since each edge in our maze spans exactly the same distance, this step is irrelevant to us. We can modfiy Prim's algorithm slightly to account for this. Here's our new step 2: <br/>
+        <br/>
+
+        2. Select a random node from the set. <br/>
+        <br/>
+        Thats it! Click on figure 3 to see our randomized Prim's algorithm in action.
+        <br/>
+      </p>
+      <br/>
+    </div>
+    <div class=canvas-container>
+      <canvas class="canvas" id="3" width="490" height="490">Figure 3</canvas>
+      <strong>Figure 3</strong>
+    </div>
+  </div>
+
+  <div class='maze_demonstration'>
+    <div class='canvas-container'>
+      <canvas class="canvas" id="4" width="490" height="490">Figure 3</canvas>
+      <strong>Figure 4</strong>
+    </div>
+    <div class="description">
+      <h3>Kruskal's Algorithm</h3>
+
+      <p>
+        The last maze generation algorithm we'll discuss is Kruskal's. Here's an overview:<br/>
+        <br/>
+        1. Randomly iterate through all walls of the maze. <br/>
+        2. If the two nodes separated by the wall belong to different sets, remove the wall between them. This joins the two into the same set. <br/>
+        <br/>
+        <br/>
+
+        By interating over each wall in the maze, we consider each pair of adjacent path nodes. Since we connect any two path nodes that are not already in the same set, all path nodes will be in the same set by the end of the process.
+        In other words, the maze will be fully integrated; you'll be able to traverse to any path node from any other.<br/>
+        <br/>
+        <br/>
+
+      </p>
+
+      <br/>
+    </div>
+  </div>
+  <h2>Phase 2: Solving Mazes</h2>
+  <div class="maze_demonstration">
+    <div class="description">
+      <h3>Depth First Search</h3>
+
+      <p>We're going to use DFS to solve a maze this time. When it comes to searching rather than constructing a maze with this algorithm, there's one crucial difference to attend to. We can change step 4 of our DFT post-order algorithm to the following:<br/>
+        <br/>
+
+        4. Repeat step two onward until the target is found. <br/>
+        <br/>
+        By terminating the process when our target is reached, we avoid unecessary iterations!
+        <br/>
+        <br/>
+      </p>
+    </div>
+    <div class="canvas-container">
+      <canvas class="canvas" id="5" width="490" height="490">Figure 4</canvas>
+      <strong>Figure 5</strong>
+    </div>
+  </div>
+  <div class="maze_demonstration">
+    <div class='canvas-container'>
+      <canvas class="canvas" id="6" width="490" height="490">Figure 5</canvas>
+      <strong>Figure 6</strong>
+    </div>
+    <div class="description">
+      <h3>Breadth First Search</h3>
+      <p>
+        BFS works similarly to DFS. As the name implies, it distinguishes itself by visiting a root's sibilings first, rather than it's children. We accomplish this by substituting our stack from DFS with a queue.
+      </p><br/>
+      <br/>
+    </div>
+  </div>
+  <div class="maze_demonstration">
+    <div class="description">
+      <h3>A*</h3>
+
+      <p>
+        The last algorithm we'll look at is A*. An extension of Dijkstra's algorithm, A* proceeds with the following steps:<br/>
+        <br/>
+
+        1. Initialize a set with a single node.<br/>
+        2. Choose the node from the set with the least f-value*, and remove it from the set.<br/>
+        3. For each of the node's children:<br/>
+        3a. Calculate the f value of each of the node's children.<br/>
+        3b. If there is a visited node with the same coordinates and a lower f-value as this child, discard the child. Else, add it to the set.<br/>
+        4. Repeat steps 2-3 until the target is reached.<br/>
+        <br/>
+
+
+        * A node's f-value is calculated by adding it's g-value to it's h-value. A node's g-value is simply how many steps away it is from the root, and it's h-value is it's euclidean distance from the target.
+        A* is a 'smart' algorithm, in that it uses the a node's f-value as a heuristic 'guess' how likely it is to be closest to the target. It selects the node with the least f in attempt to reach the target faster.
+        <br/>
+      </p>
+      <br/>
+    </div>
+    <div class="canvas-container">
+      <canvas class="canvas" id="7" width="490" height="490">Figure 6</canvas>
+      <strong>Figure 7</strong>
+    </div>
+  </div>
+</body> -->

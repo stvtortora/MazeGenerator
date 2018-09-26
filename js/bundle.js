@@ -71,6 +71,28 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./js/button_util.js":
+/*!***************************!*\
+  !*** ./js/button_util.js ***!
+  \***************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+const changeButtonStatus = (status) => {
+  const buttons = document.getElementsByTagName('button');
+
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].disabled = status;
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (changeButtonStatus);
+
+
+/***/ }),
+
 /***/ "./js/components/disjoint_set.js":
 /*!***************************************!*\
   !*** ./js/components/disjoint_set.js ***!
@@ -145,6 +167,17 @@ class Grid {
       node.parent_connector.onPath = true;
     }
     this.drawPath(ctx, node, "#2ae950");
+  }
+
+  clearSolution (ctx, node) {
+    for (let i = 0; i < this.yDim; i++) {
+      for (let j = 0; j < this.xDim; j++) {
+        const node = this.matrix[i][j];
+        if (node.onPath) {
+          this.drawPath(ctx, node, "#2ae950");
+        }
+      }
+    }
   }
 
   drawSolution (root, target, ctx) {
@@ -450,6 +483,8 @@ const maze = (maze_generator, ctx, width, height, rootCoords, gridDimensions, so
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _solvers_maze_solver__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../solvers/maze_solver */ "./js/solvers/maze_solver.js");
+/* harmony import */ var _button_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../button_util */ "./js/button_util.js");
+
 
 
 const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
@@ -459,6 +494,7 @@ const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
   const generationStep = () => {
     if(options.length === 0) {
       window.clearInterval(timer);
+      Object(_button_util__WEBPACK_IMPORTED_MODULE_1__["default"])(false);
       return;
     };
 
@@ -503,6 +539,8 @@ const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _solvers_maze_solver__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../solvers/maze_solver */ "./js/solvers/maze_solver.js");
+/* harmony import */ var _button_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../button_util */ "./js/button_util.js");
+
 
 
 const randomized_dfs_generator = (grid, root, ctx, algo) => {
@@ -520,6 +558,7 @@ const randomized_dfs_generator = (grid, root, ctx, algo) => {
   const generationStep = () => {
     if(options.length === 0) {
       window.clearInterval(timer);
+      Object(_button_util__WEBPACK_IMPORTED_MODULE_1__["default"])(false);
       return;
     };
 
@@ -615,6 +654,17 @@ document.addEventListener("DOMContentLoaded", () => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _generators_master_generator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./generators/master_generator */ "./js/generators/master_generator.js");
 /* harmony import */ var _generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./generators/prims_dfs_generator */ "./js/generators/prims_dfs_generator.js");
+/* harmony import */ var _generators_randomized_dfs_generator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./generators/randomized_dfs_generator */ "./js/generators/randomized_dfs_generator.js");
+/* harmony import */ var _button_util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./button_util */ "./js/button_util.js");
+/* harmony import */ var _solvers_maze_solver__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./solvers/maze_solver */ "./js/solvers/maze_solver.js");
+/* harmony import */ var _components_grid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/grid */ "./js/components/grid.js");
+/* harmony import */ var _components_node__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/node */ "./js/components/node.js");
+
+
+
+
+
+
 
 
 
@@ -622,9 +672,41 @@ const mazeHandlers = (canvas) => {
   const ctx = canvas.getContext('2d');
   const width = canvas.width;
   const height = canvas.height;
+  let grid;
+  let root;
 
-  document.getElementById('1').addEventListener("click", () => {
-    Object(_generators_master_generator__WEBPACK_IMPORTED_MODULE_0__["default"])(_generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], ctx, width, height, [24, 24], [50, 50], null, 'prims');
+  const generateMaze = (solve_algo, gen_algo, generator, rootCoords = [24, 24]) => {
+    grid = new _components_grid__WEBPACK_IMPORTED_MODULE_5__["default"]([50, 50]);
+    root = new _components_node__WEBPACK_IMPORTED_MODULE_6__["default"](rootCoords, null);
+    ctx.clearRect(0, 0, width, height);
+
+    Object(_button_util__WEBPACK_IMPORTED_MODULE_3__["default"])(true);
+
+    generator(grid, root, ctx, solve_algo, gen_algo);
+  }
+
+  document.getElementById('prims_generator').addEventListener("click", () => {
+    generateMaze(null, 'prims', _generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"]);
+  })
+
+  document.getElementById('randomized_dfs_generator').addEventListener("click", () => {
+    generateMaze(null, null, _generators_randomized_dfs_generator__WEBPACK_IMPORTED_MODULE_2__["default"]);
+  })
+
+  document.getElementById('strict_dfs_generator').addEventListener("click", () => {
+    generateMaze(null, 'dfs', _generators_prims_dfs_generator__WEBPACK_IMPORTED_MODULE_1__["default"], [0, 0]);
+  })
+
+  document.getElementById('dfs_solver').addEventListener("click", () => {
+    Object(_solvers_maze_solver__WEBPACK_IMPORTED_MODULE_4__["default"])(ctx, root, grid.matrix[48][48], grid, 'dfs');
+  })
+
+  document.getElementById('bfs_solver').addEventListener("click", () => {
+    Object(_solvers_maze_solver__WEBPACK_IMPORTED_MODULE_4__["default"])(ctx, root, grid.matrix[48][48], grid, 'bfs');
+  })
+
+  document.getElementById('a*_solver').addEventListener("click", () => {
+    Object(_solvers_maze_solver__WEBPACK_IMPORTED_MODULE_4__["default"])(ctx, root, grid.matrix[48][48], grid, 'a*');
   })
 }
 
@@ -643,9 +725,14 @@ const mazeHandlers = (canvas) => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_min_heap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/min_heap */ "./js/components/min_heap.js");
+/* harmony import */ var _button_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../button_util */ "./js/button_util.js");
+
 
 
 const maze_solver = (ctx, root, target, grid, algo) => {
+  Object(_button_util__WEBPACK_IMPORTED_MODULE_1__["default"])(true);
+  grid.clearSolution(ctx);
+
   const euclideanDist = (current, target) => {
     return Math.sqrt(
       Math.pow((target.x - current.x), 2) +
@@ -657,15 +744,17 @@ const maze_solver = (ctx, root, target, grid, algo) => {
   }
   root.gVal = 0;
   let options = algo === 'a*' ? new _components_min_heap__WEBPACK_IMPORTED_MODULE_0__["default"](comparator, root) : [root];
-
+  debugger
   const solutionStep = () => {
     let selected = algo === 'dfs' ? options.pop() : options.shift();
+    debugger
     grid.drawPath(ctx, selected, '#fffbfb');
 
     if(selected.x === target.x && selected.y === target.y) {
 
       grid.drawSolution(root, target, ctx);
       clearInterval(timer);
+      Object(_button_util__WEBPACK_IMPORTED_MODULE_1__["default"])(false);
     }
 
     selected.children.forEach(child => {

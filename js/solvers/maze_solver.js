@@ -1,6 +1,10 @@
 import MinHeap from '../components/min_heap';
+import changeButtonStatus from '../button_util';
 
 const maze_solver = (ctx, root, target, grid, algo) => {
+  changeButtonStatus(true);
+  grid.clearSolution(ctx);
+
   const euclideanDist = (current, target) => {
     return Math.sqrt(
       Math.pow((target.x - current.x), 2) +
@@ -12,15 +16,17 @@ const maze_solver = (ctx, root, target, grid, algo) => {
   }
   root.gVal = 0;
   let options = algo === 'a*' ? new MinHeap(comparator, root) : [root];
-
+  debugger
   const solutionStep = () => {
     let selected = algo === 'dfs' ? options.pop() : options.shift();
+    debugger
     grid.drawPath(ctx, selected, '#fffbfb');
 
     if(selected.x === target.x && selected.y === target.y) {
 
       grid.drawSolution(root, target, ctx);
       clearInterval(timer);
+      changeButtonStatus(false);
     }
 
     selected.children.forEach(child => {

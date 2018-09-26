@@ -1,4 +1,5 @@
 import maze_solver from '../solvers/maze_solver';
+import changeButtonStatus from '../button_util';
 
 const randomized_dfs_generator = (grid, root, ctx, algo) => {
   const shuffle = (array) => {
@@ -15,6 +16,7 @@ const randomized_dfs_generator = (grid, root, ctx, algo) => {
   const generationStep = () => {
     if(options.length === 0) {
       window.clearInterval(timer);
+      changeButtonStatus(false);
       return;
     };
 

@@ -1,4 +1,5 @@
 import maze_solver from '../solvers/maze_solver';
+import changeButtonStatus from '../button_util';
 
 const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
 
@@ -7,6 +8,7 @@ const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
   const generationStep = () => {
     if(options.length === 0) {
       window.clearInterval(timer);
+      changeButtonStatus(false);
       return;
     };
 

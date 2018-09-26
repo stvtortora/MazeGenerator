@@ -39,6 +39,17 @@ class Grid {
     this.drawPath(ctx, node, "#2ae950");
   }
 
+  clearSolution (ctx, node) {
+    for (let i = 0; i < this.yDim; i++) {
+      for (let j = 0; j < this.xDim; j++) {
+        const node = this.matrix[i][j];
+        if (node.onPath) {
+          this.drawPath(ctx, node, "#2ae950");
+        }
+      }
+    }
+  }
+
   drawSolution (root, target, ctx) {
     const path = [target];
     while(path[0].x !== root.x || path[0].y !== root.y) {
