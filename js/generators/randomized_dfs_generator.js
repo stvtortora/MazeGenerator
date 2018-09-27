@@ -43,7 +43,15 @@ const randomized_dfs_generator = (grid, root, ctx, algo) => {
     selected ? options.push(selected) : options.pop();
   }
 
-  const timer = setInterval(generationStep, 0);
+  let timer;
+  if (algo) {
+    while(options.length > 0){
+      generationStep();
+      changeButtonStatus(false);
+    }
+  } else {
+    timer = setInterval(generationStep, 0);
+  }
 }
 
 

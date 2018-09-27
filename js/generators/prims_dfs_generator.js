@@ -7,8 +7,8 @@ const primsDfsGenerator = (grid, root, ctx, solve_algo, gen_algo) => {
 
   const generationStep = () => {
     if(options.length === 0) {
-      window.clearInterval(timer);
       changeButtonStatus(false);
+      window.clearInterval(timer);
       return;
     };
 
