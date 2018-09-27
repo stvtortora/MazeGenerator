@@ -126,12 +126,16 @@ button:hover {
   width: 444px;
 }
 
-/* .links {
+.links {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .link {
-  margin: 15px;
-} */
+  margin: 0px 20px;
+}
+
+a {
+  color: #08f20d;
+}
